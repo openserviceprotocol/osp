@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+venv/
+.venv/
+
+# Build output
+out/
+_site/
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Temporary files
+tmp/
+temp/

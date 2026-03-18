@@ -1,0 +1,17 @@
+Open Service Protocol (OSP)
+Copyright 2026 Open Service Protocol Contributors
+
+This project uses dual licensing:
+
+- The specification documents (spec/ directory and all .md files describing 
+  the protocol) are licensed under the Creative Commons Attribution 4.0 
+  International License (CC-BY-4.0). 
+  See: https://creativecommons.org/licenses/by/4.0/
+
+- All code, schemas, tools, and reference implementations are licensed 
+  under the Apache License, Version 2.0.
+  See: LICENSE file in the repository root.
+
+You are free to implement the OSP specification in any software, 
+commercial or non-commercial, without restriction. Attribution is 
+required when reproducing or modifying the specification text itself.
