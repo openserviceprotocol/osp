@@ -2,7 +2,9 @@
 
 **An open standard for agent-first service discovery, contracting, and delivery.**
 
-AI agents can read websites (llms.txt, Cloudflare Markdown). They can call tools (MCP, OpenAPI). But they can't discover what a company *does*, evaluate whether it fits their needs, place an order, and receive the result — all through a single, standardized protocol.
+> ⚠️ **Draft specification — not yet stable.** This is an early proposal. Everything is subject to change. Feedback welcome via [Issues](../../issues) and [Discussions](../../discussions).
+
+AI agents can read websites ([llms.txt](https://llmstxt.org/), [Cloudflare Markdown](https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents/)). They can call tools ([MCP](https://modelcontextprotocol.io/), [OpenAPI](https://www.openapis.org/)). But they can't discover what a company *does*, evaluate whether it fits their needs, place an order, and receive the result — all through a single, standardized protocol.
 
 OSP closes this gap. It defines how businesses describe their services for AI agents, how agents order those services, and how delivery works — regardless of whether the service is performed by a human, a machine, or any combination.
 
@@ -63,23 +65,38 @@ Start with Layer 1 (a single file). Add layers as you need them.
 
 ## Specification
 
-- [Layer 1: Discovery](spec/discovery.md) ← start here
-- Layer 2: Contracting (draft)
-- Layer 3: Delivery (draft)
-- Layer 4: Settlement (draft)
+- **[Layer 1: Discovery](spec/discovery.md)** — the `osp.md` file format and how agents find your services
+- **[Service Manifest Reference](spec/service-manifest-reference.md)** — complete YAML schema for describing a service
+- Layer 2: Contracting (planned)
+- Layer 3: Delivery (planned)
+- Layer 4: Settlement (planned)
+
+## Schemas
+
+Machine-readable JSON Schemas for validation:
+
+- **[osp-md.schema.json](schemas/osp-md.schema.json)** — validates the structure of `osp.md` files
+- **[service-manifest.schema.json](schemas/service-manifest.schema.json)** — validates service manifest YAML files
 
 ## Examples
 
-Real-world `osp.md` files for different industries:
+### osp.md files
 
-- [Logistics provider](examples/logistics.osp.md)
-- [Consulting firm](examples/consulting.osp.md)
-- [IT service provider](examples/it-services.osp.md)
+Discovery files for different industries:
 
-## Tools
+- **[Logistics provider](examples/logistics.osp.md)** — international transport, temperature-controlled
+- **[Consulting firm](examples/consulting.osp.md)** — strategy advisory, multi-phase engagements
+- **[IT service provider](examples/it-services.osp.md)** — managed cloud, continuous service
 
-- **Validator** — Check your `osp.md` against the spec: `npx osp-validate ./osp.md`
-- **Token counter** — See how many tokens your service description uses
+### Service manifests
+
+Complete YAML manifests showing all schema sections:
+
+- **[LTL Transport](examples/manifests/ltl-transport.yaml)** — transactional service, supervised maturity, async delivery
+- **[Market Entry Strategy](examples/manifests/market-entry.yaml)** — consultative service, assisted maturity, interactive delivery
+- **[Managed Cloud Hosting](examples/manifests/managed-hosting.yaml)** — continuous service, autonomous maturity, tracked delivery
+
+These three examples deliberately cover different engagement types, maturity levels, and delivery modes to show the full range of the format.
 
 ## Design Principles
 
@@ -88,9 +105,32 @@ Real-world `osp.md` files for different industries:
 - **Maturity-agnostic interface.** Same API whether a human or algorithm fulfills the service.
 - **Build on what exists.** Markdown for readability, JSON Schema for structure, MCP for tool integration.
 
+## Repository Structure
+
+```
+osp/
+├── spec/
+│   ├── discovery.md                    # Layer 1 specification
+│   └── service-manifest-reference.md   # Complete manifest schema docs
+├── schemas/
+│   ├── osp-md.schema.json             # JSON Schema for osp.md
+│   └── service-manifest.schema.json    # JSON Schema for manifests
+├── examples/
+│   ├── logistics.osp.md               # Example: transport company
+│   ├── consulting.osp.md              # Example: strategy consultancy
+│   ├── it-services.osp.md             # Example: managed cloud provider
+│   └── manifests/
+│       ├── ltl-transport.yaml          # Full manifest: transport
+│       ├── market-entry.yaml           # Full manifest: consulting
+│       └── managed-hosting.yaml        # Full manifest: IT services
+└── tools/                              # Validator and utilities (planned)
+```
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). We welcome feedback, examples, and implementations.
+
+The most valuable contribution right now: create an `osp.md` for your own business or industry and submit it as a pull request.
 
 ## License
 

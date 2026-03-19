@@ -62,30 +62,49 @@ It follows this structure. Only the H1 heading and the blockquote summary are re
 
 Each service listed in `osp.md` links to a YAML manifest with the full description. Service manifests are placed in an `/osp/services/` directory by convention.
 
+The complete manifest format is documented in the [Service Manifest Reference](service-manifest-reference.md). The reference defines six sections (identity, evaluation, contract, delivery, governance, lifecycle) with all available fields, types, and constraints.
+
+Machine-readable JSON Schemas for validation are available in the [schemas/](../schemas/) directory.
+
 ### Minimal Service Manifest
+
+The smallest valid service manifest contains only identity and evaluation:
 
 ```yaml
 osp_version: "0.1"
+
 service:
-  id: "{domain.entity.action}"
-  name: "{Human-readable name}"
-  status: "active"
-
-  summary: "{What this service does, in 2-3 sentences}"
-
-  when_to_use: "{When an agent should consider this service}"
-
-  when_not_to_use: "{When an agent should NOT use this service. 
-    Include concrete thresholds where applicable.}"
+  identity:
+    id: "example.service.basic"
+    name: "Basic Example Service"
+    version: "1.0.0"
+    status: "active"
+    summary: "A minimal service manifest demonstrating required fields only."
+    when_to_use: "Use this as a template when creating your first service manifest."
+    when_not_to_use: "Do not use in production. This is a documentation example."
 
   evaluation:
-    # Key parameters an agent needs for comparison
-    # Structure varies by service type
+    geography:
+      service_regions: ["CH", "DE", "AT"]
+    performance:
+      standard_leadtime: "48h"
+    pricing:
+      model: "per_unit"
+      currency: "CHF"
+      indicative_range:
+        min: 100
+        max: 500
 ```
 
-### Full Service Manifest
+This is enough for an agent to find, understand, and roughly evaluate the service. Providers add sections incrementally as integration deepens.
 
-See [Service Manifest Reference](service-manifest-reference.md) for all available fields, including pricing indicators, SLAs, certifications, and maturity information.
+### Full Examples
+
+Complete, real-world service manifests for different industries and engagement types:
+
+- [LTL Transport](../examples/manifests/ltl-transport.yaml) — transactional, supervised maturity, async delivery
+- [Market Entry Strategy](../examples/manifests/market-entry.yaml) — consultative, assisted maturity, interactive delivery
+- [Managed Cloud Hosting](../examples/manifests/managed-hosting.yaml) — continuous, autonomous maturity, tracked delivery
 
 ## Relationship to Other Standards
 
@@ -109,6 +128,6 @@ If a provider offers MCP integration, the endpoint is listed in the Integration 
 
 ## Token Efficiency
 
-A well-written `osp.md` file should consume fewer than 500 tokens for the full file, and fewer than 100 tokens for a quick relevance check (H1 + blockquote). Service manifests should consume fewer than 1,000 tokens each.
+A well-written `osp.md` file should consume fewer than 500 tokens for the full file, and fewer than 100 tokens for a quick relevance check (H1 + blockquote). Service manifests should consume fewer than 1,500 tokens each.
 
 Providers can verify their token counts using the OSP validator tool.

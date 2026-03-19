@@ -1,0 +1,388 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://openserviceprotocol.org/schemas/service-manifest.schema.json",
+  "title": "OSP Service Manifest",
+  "description": "Schema for validating OSP service manifest YAML files.",
+  "type": "object",
+  "required": ["osp_version", "service"],
+  "properties": {
+    "osp_version": {
+      "type": "string",
+      "enum": ["0.1"],
+      "description": "OSP specification version"
+    },
+    "service": {
+      "type": "object",
+      "required": ["identity", "evaluation"],
+      "properties": {
+
+        "identity": {
+          "type": "object",
+          "required": ["id", "name", "version", "status", "summary", "when_to_use", "when_not_to_use"],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9]*\\.[a-z][a-z0-9]*\\.[a-z][a-z0-9_-]*$",
+              "description": "Unique identifier in domain.entity.action format"
+            },
+            "name": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "version": {
+              "type": "string",
+              "pattern": "^\\d+\\.\\d+\\.\\d+$",
+              "description": "Semantic versioning"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["active", "deprecated", "draft", "experimental"]
+            },
+            "maturity": {
+              "type": "string",
+              "enum": ["human", "assisted", "supervised", "autonomous"]
+            },
+            "summary": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "when_to_use": {
+              "type": "string"
+            },
+            "when_not_to_use": {
+              "type": "string"
+            },
+            "tags": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "domain": {
+              "type": "string"
+            },
+            "service_family": {
+              "type": "string"
+            },
+            "engagement_type": {
+              "type": "string",
+              "enum": ["transactional", "consultative", "continuous"]
+            }
+          }
+        },
+
+        "evaluation": {
+          "type": "object",
+          "properties": {
+            "capacity": {
+              "type": "object",
+              "description": "Domain-specific capacity parameters. No fixed schema — providers define fields relevant to their service.",
+              "additionalProperties": true
+            },
+            "geography": {
+              "type": "object",
+              "properties": {
+                "service_regions": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "excluded_regions": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "performance": {
+              "type": "object",
+              "properties": {
+                "standard_leadtime": { "type": "string" },
+                "express_available": { "type": "boolean" },
+                "express_leadtime": { "type": "string" },
+                "completion_rate": {
+                  "type": "number", "minimum": 0, "maximum": 1
+                },
+                "on_time_rate": {
+                  "type": "number", "minimum": 0, "maximum": 1
+                },
+                "average_quality_score": { "type": "number" },
+                "sample_size": {
+                  "type": "integer", "minimum": 0
+                },
+                "sample_period": { "type": "string" }
+              }
+            },
+            "pricing": {
+              "type": "object",
+              "properties": {
+                "model": {
+                  "type": "string",
+                  "enum": ["per_unit", "per_hour", "per_project", "per_shipment", "subscription", "custom"]
+                },
+                "currency": {
+                  "type": "string",
+                  "pattern": "^[A-Z]{3}$",
+                  "description": "ISO 4217 currency code"
+                },
+                "indicative_range": {
+                  "type": "object",
+                  "properties": {
+                    "min": { "type": "number", "minimum": 0 },
+                    "max": { "type": "number", "minimum": 0 },
+                    "note": { "type": "string" }
+                  }
+                },
+                "express_surcharge": { "type": "string" },
+                "token_pricing_available": { "type": "boolean" }
+              }
+            },
+            "certifications": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "sla": {
+              "type": "object",
+              "properties": {
+                "response_time": { "type": "string" },
+                "tracking_available": { "type": "boolean" },
+                "incident_notification": { "type": "string" },
+                "late_delivery_compensation": { "type": "string" },
+                "quality_guarantee": { "type": "string" }
+              }
+            },
+            "confidence_note": {
+              "type": "string"
+            }
+          }
+        },
+
+        "contract": {
+          "type": "object",
+          "properties": {
+            "engagement": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["transactional", "consultative", "continuous"]
+                },
+                "quote_binding": { "type": "boolean" },
+                "quote_validity": { "type": "string" },
+                "multi_phase": { "type": "boolean" },
+                "initial_phase_independent": { "type": "boolean" },
+                "scope_negotiation": { "type": "string" },
+                "minimum_term": { "type": "string" },
+                "notice_period": { "type": "string" },
+                "individual_orders": { "type": "boolean" }
+              }
+            },
+            "input": {
+              "type": "object",
+              "properties": {
+                "required_fields": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/field_definition"
+                  }
+                },
+                "optional_fields": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      { "$ref": "#/$defs/field_definition" },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "default": {}
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "fields": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/field_definition"
+                  }
+                },
+                "confidence_included": { "type": "boolean" },
+                "examples": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["scenario"],
+                    "properties": {
+                      "scenario": { "type": "string" },
+                      "input": { "type": "object" },
+                      "output": { "type": "object" }
+                    }
+                  }
+                }
+              }
+            },
+            "preconditions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["condition"],
+                "properties": {
+                  "condition": { "type": "string" },
+                  "on_failure": { "type": "string" },
+                  "agent_instruction": { "type": "string" }
+                }
+              }
+            },
+            "postconditions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["guarantee"],
+                "properties": {
+                  "guarantee": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+
+        "delivery": {
+          "type": "object",
+          "required": ["mode"],
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": ["synchronous", "async_tracked", "interactive"]
+            },
+            "expected_duration": { "type": "string" },
+            "tracking": {
+              "type": "object",
+              "properties": {
+                "status_endpoint": { "type": "boolean" },
+                "webhook_support": { "type": "boolean" },
+                "update_frequency": { "type": "string" }
+              }
+            },
+            "interaction": {
+              "type": "object",
+              "properties": {
+                "input_requests_possible": { "type": "boolean" },
+                "review_points": { "type": "boolean" },
+                "max_interactions": { "type": "integer" }
+              }
+            },
+            "human_involvement": {
+              "type": "object",
+              "properties": {
+                "disclosed": { "type": "boolean" },
+                "typical_touchpoints": { "type": "integer" }
+              }
+            }
+          }
+        },
+
+        "governance": {
+          "type": "object",
+          "properties": {
+            "access": {
+              "type": "object",
+              "properties": {
+                "authentication_required": { "type": "boolean" },
+                "authorization_model": {
+                  "type": "string",
+                  "enum": ["api_key", "oauth2", "token_account"]
+                },
+                "agent_registration_required": { "type": "boolean" }
+              }
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "input_sensitivity": {
+                  "type": "string",
+                  "enum": ["public", "internal", "confidential", "restricted"]
+                },
+                "output_sensitivity": {
+                  "type": "string",
+                  "enum": ["public", "internal", "confidential", "restricted"]
+                },
+                "pii_fields": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "retention_period": { "type": "string" },
+                "deletion_on_request": { "type": "boolean" }
+              }
+            },
+            "compliance": {
+              "type": "object",
+              "properties": {
+                "regulations": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "audit_trail": { "type": "boolean" }
+              }
+            }
+          }
+        },
+
+        "lifecycle": {
+          "type": "object",
+          "properties": {
+            "created": {
+              "type": "string", "format": "date"
+            },
+            "last_modified": {
+              "type": "string", "format": "date"
+            },
+            "changelog": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["version", "date", "changes"],
+                "properties": {
+                  "version": { "type": "string" },
+                  "date": { "type": "string", "format": "date" },
+                  "changes": { "type": "string" }
+                }
+              }
+            },
+            "deprecation": {
+              "type": "object",
+              "properties": {
+                "planned": { "type": "boolean" },
+                "successor": { "type": ["string", "null"] },
+                "sunset_date": { "type": ["string", "null"], "format": "date" }
+              }
+            },
+            "review": {
+              "type": "object",
+              "properties": {
+                "next_review": { "type": "string", "format": "date" },
+                "review_cycle": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "$defs": {
+    "field_definition": {
+      "type": "object",
+      "required": ["name", "type", "description"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": ["string", "number", "boolean", "date", "datetime", "enum", "file", "object", "array"]
+        },
+        "description": { "type": "string" },
+        "constraints": { "type": "object" }
+      }
+    }
+  }
+}

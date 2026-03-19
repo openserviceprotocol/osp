@@ -1,0 +1,222 @@
+osp_version: "0.1"
+
+service:
+  identity:
+    id: "cloudops.infrastructure.managed-hosting"
+    name: "Managed Cloud Hosting"
+    version: "3.0.0"
+    status: "active"
+    maturity: "autonomous"
+    summary: |
+      Fully managed VM and container hosting on AWS and Azure.
+      Includes monitoring, patching, backups, and incident response.
+      Infrastructure-as-code based, with automated scaling.
+    when_to_use: |
+      Suitable for production workloads requiring 99.9%+ uptime,
+      automated patching, and 24/7 monitoring. Supports Linux and
+      Windows VMs, Kubernetes clusters, and managed databases.
+      Ideal for companies that need enterprise-grade infrastructure
+      without a dedicated ops team.
+    when_not_to_use: |
+      Not suitable for development/testing environments where
+      cost is the primary concern (use direct cloud provider
+      instead). Not available for Google Cloud Platform. Not
+      a fit for workloads requiring bare-metal performance or
+      custom hardware (GPU clusters, HPC).
+    tags: ["hosting", "cloud", "aws", "azure", "managed", "infrastructure"]
+    domain: "it-services"
+    service_family: "infrastructure"
+    engagement_type: "continuous"
+
+  evaluation:
+    capacity:
+      vm_types: ["general-purpose", "compute-optimized", "memory-optimized"]
+      container_orchestration: ["kubernetes", "ecs"]
+      cloud_providers: ["aws", "azure"]
+      os_support: ["ubuntu", "debian", "rhel", "windows-server"]
+      max_managed_instances: 500
+      managed_databases: ["postgresql", "mysql", "redis", "mongodb"]
+
+    geography:
+      service_regions: ["CH", "DE", "AT"]
+      infrastructure_regions: ["eu-central-1", "eu-west-1", "westeurope",
+                               "northeurope", "us-east-1", "us-west-2"]
+
+    performance:
+      standard_leadtime: "24-48h for initial setup"
+      uptime_sla: 0.999
+      patch_cycle: "monthly, critical patches within 24h"
+      backup_frequency: "daily, 30-day retention"
+      completion_rate: 0.99
+      sample_size: 340
+      sample_period: "12 months"
+
+    pricing:
+      model: "subscription"
+      currency: "CHF"
+      indicative_range:
+        min: 500
+        max: 25000
+        note: "Monthly cost. Depends on number and size of instances,
+               storage, and SLA tier. Entry tier (2 VMs, monitoring,
+               business-hours support) starts at CHF 500/month."
+      token_pricing_available: true
+
+    certifications:
+      - "ISO 27001"
+      - "SOC 2 Type II"
+      - "AWS Advanced Partner"
+      - "Azure Expert MSP"
+
+    sla:
+      response_time: "< 1h (24/7 tier), < 4h (business hours tier)"
+      tracking_available: true
+      incident_notification: "< 15 minutes"
+      late_delivery_compensation: "Service credits per SLA tier"
+      quality_guarantee: |
+        99.9% uptime guaranteed. Downtime beyond SLA threshold
+        is compensated with service credits at 10x the
+        proportional monthly fee.
+
+    confidence_note: |
+      Uptime SLA applies to the managed layer. Underlying cloud
+      provider SLAs apply additionally. Performance metrics
+      based on 340 active hosting contracts.
+
+  contract:
+    engagement:
+      type: "continuous"
+      minimum_term: "12 months"
+      notice_period: "3 months"
+      individual_orders: true
+
+    input:
+      required_fields:
+        - name: "workload_description"
+          type: "string"
+          description: "Description of the workloads to be hosted"
+        - name: "cloud_provider"
+          type: "enum"
+          description: "Preferred cloud provider"
+          constraints:
+            values: ["aws", "azure"]
+        - name: "sla_tier"
+          type: "enum"
+          description: "Support and SLA tier"
+          constraints:
+            values: ["business_hours", "24x7"]
+        - name: "instance_count"
+          type: "number"
+          description: "Number of instances to manage"
+          constraints:
+            minimum: 1
+            maximum: 500
+
+      optional_fields:
+        - name: "infrastructure_region"
+          type: "string"
+          description: "Preferred cloud region"
+          default: "eu-central-1"
+        - name: "compliance_requirements"
+          type: "array"
+          description: "Specific compliance standards to adhere to"
+        - name: "migration_needed"
+          type: "boolean"
+          description: "Whether existing infrastructure needs to be migrated"
+          default: false
+        - name: "existing_iac"
+          type: "string"
+          description: "Existing infrastructure-as-code tool in use
+                       (terraform, pulumi, cloudformation)"
+
+    output:
+      fields:
+        - name: "dashboard_url"
+          type: "string"
+          description: "URL to the monitoring dashboard"
+        - name: "monthly_report"
+          type: "file"
+          description: "Monthly operations report (PDF)"
+        - name: "uptime_actual"
+          type: "number"
+          description: "Actual uptime percentage for the billing period"
+        - name: "incidents"
+          type: "array"
+          description: "List of incidents during the billing period"
+        - name: "cost_breakdown"
+          type: "object"
+          description: "Itemized cost breakdown by resource"
+      confidence_included: false
+
+      examples:
+        - scenario: "Small SaaS company, 5 instances, business hours"
+          input:
+            workload_description: "Web application with PostgreSQL database,
+                                  Redis cache, 2 application servers"
+            cloud_provider: "aws"
+            sla_tier: "business_hours"
+            instance_count: 5
+          output:
+            uptime_actual: 0.9997
+            cost_breakdown:
+              infrastructure: 1200
+              management_fee: 800
+              total_monthly: 2000
+
+    preconditions:
+      - condition: "Cloud provider is AWS or Azure"
+        on_failure: "reject"
+        agent_instruction: "Google Cloud Platform is not supported.
+                           Contact provider for referral to a GCP partner."
+      - condition: "Instance count within supported range"
+        on_failure: "reject"
+        agent_instruction: "For more than 500 instances, contact
+                           the provider for a custom enterprise agreement."
+
+    postconditions:
+      - guarantee: "Monitoring active within 24h of setup completion"
+      - guarantee: "First backup completed within 48h"
+      - guarantee: "Monthly operations report delivered by 5th business day"
+
+  delivery:
+    mode: "async_tracked"
+    tracking:
+      status_endpoint: true
+      webhook_support: true
+      update_frequency: "real-time for incidents, daily for operations"
+    human_involvement:
+      disclosed: true
+      typical_touchpoints: 2
+
+  governance:
+    access:
+      authentication_required: true
+      authorization_model: "oauth2"
+      agent_registration_required: true
+    data:
+      input_sensitivity: "confidential"
+      output_sensitivity: "internal"
+      pii_fields: []
+      retention_period: "duration of contract + 12 months"
+      deletion_on_request: true
+    compliance:
+      regulations: ["DSG", "GDPR", "ISO 27001"]
+      audit_trail: true
+    agent_restrictions:
+      rate_limit: "1000 requests/hour"
+      budget_limit_enforceable: true
+
+  lifecycle:
+    created: "2024-06-01"
+    last_modified: "2026-03-10"
+    changelog:
+      - version: "3.0.0"
+        date: "2026-03-10"
+        changes: "Migrated to OSP format. Added token pricing.
+                 Expanded to include managed databases."
+      - version: "2.0.0"
+        date: "2025-09-01"
+        changes: "Added Azure support and Kubernetes management"
+    review:
+      next_review: "2026-09-01"
+      review_cycle: "semi-annually"

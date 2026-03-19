@@ -1,0 +1,237 @@
+osp_version: "0.1"
+
+service:
+  identity:
+    id: "translog.transport.ltl"
+    name: "LTL Transport Europe"
+    version: "2.1.0"
+    status: "active"
+    maturity: "supervised"
+    summary: |
+      Transport of partial loads (5-15 pallets) across Europe.
+      Temperature-controlled between +2°C and +25°C available.
+      Standard lead time 48-96h from pickup.
+    when_to_use: |
+      Suitable for regular and one-off shipments of 5 to 15
+      Euro pallets within Europe. Ideal for temperature-sensitive
+      goods (pharma, food, chemicals) as all vehicles are equipped
+      with real-time temperature monitoring. Also available for
+      non-temperature-critical goods at lower cost.
+    when_not_to_use: |
+      Not suitable for single pallets (use parcel-pallet service),
+      shipments over 15 pallets (use FTL service), dangerous goods
+      classes 1, 6 and 7, or destinations outside Europe/UK/Norway.
+    tags: ["transport", "logistics", "ltl", "temperature", "europe", "pharma"]
+    domain: "logistics"
+    service_family: "transport"
+    engagement_type: "transactional"
+
+  evaluation:
+    capacity:
+      min_pallets: 5
+      max_pallets: 15
+      pallet_types: ["EUR1", "EUR2", "industrial"]
+      max_weight_kg: 12000
+      temperature_range: [2, 25]
+      temperature_precision_celsius: 1
+
+    geography:
+      service_regions: ["CH", "DE", "AT", "FR", "IT", "NL", "BE", "LU",
+                        "ES", "PT", "UK", "NO", "SE", "DK", "PL", "CZ"]
+      excluded_regions: []
+
+    performance:
+      standard_leadtime: "48-96h"
+      express_available: true
+      express_leadtime: "24-36h"
+      on_time_rate: 0.94
+      completion_rate: 0.97
+      sample_size: 4200
+      sample_period: "12 months"
+
+    pricing:
+      model: "per_shipment"
+      currency: "CHF"
+      indicative_range:
+        min: 800
+        max: 4500
+        note: "Depends on distance, weight, and temperature requirements.
+               Binding quote provided on request."
+      express_surcharge: "40-60%"
+      token_pricing_available: false
+
+    certifications:
+      - "GDP (Good Distribution Practice)"
+      - "ISO 9001:2015"
+      - "AEO (Authorized Economic Operator)"
+
+    sla:
+      response_time: "< 2h during business hours (CET)"
+      tracking_available: true
+      incident_notification: "< 15 minutes"
+      late_delivery_compensation: "15% of base price per 24h delay"
+
+    confidence_note: |
+      Performance metrics based on 4,200 shipments over the
+      last 12 months. Indicative pricing is non-binding and
+      serves for budgeting purposes only.
+
+  contract:
+    engagement:
+      type: "transactional"
+      quote_binding: true
+      quote_validity: "48h"
+
+    input:
+      required_fields:
+        - name: "pickup_location"
+          type: "string"
+          description: "Pickup address including postal code and country"
+        - name: "pickup_date"
+          type: "date"
+          description: "Requested pickup date"
+        - name: "delivery_location"
+          type: "string"
+          description: "Delivery address including postal code and country"
+        - name: "delivery_date_latest"
+          type: "date"
+          description: "Latest acceptable delivery date"
+        - name: "pallet_count"
+          type: "number"
+          description: "Number of pallets"
+          constraints:
+            minimum: 5
+            maximum: 15
+        - name: "total_weight_kg"
+          type: "number"
+          description: "Total shipment weight in kg"
+          constraints:
+            maximum: 12000
+        - name: "goods_description"
+          type: "string"
+          description: "Description of goods being transported"
+
+      optional_fields:
+        - name: "pickup_time_window"
+          type: "string"
+          description: "Preferred pickup time window"
+          default: "08:00-17:00"
+        - name: "temperature_required"
+          type: "boolean"
+          description: "Whether temperature control is needed"
+          default: false
+        - name: "temperature_target"
+          type: "number"
+          description: "Target temperature in Celsius"
+        - name: "insurance_value"
+          type: "number"
+          description: "Declared value for insurance in CHF"
+        - name: "express"
+          type: "boolean"
+          description: "Request express delivery"
+          default: false
+        - name: "pod_required"
+          type: "boolean"
+          description: "Proof of Delivery required"
+          default: true
+
+    output:
+      fields:
+        - name: "tracking_id"
+          type: "string"
+          description: "Unique tracking identifier"
+        - name: "pickup_confirmed"
+          type: "datetime"
+          description: "Confirmed pickup date and time window"
+        - name: "estimated_delivery"
+          type: "datetime"
+          description: "Estimated delivery date and time"
+        - name: "actual_delivery"
+          type: "datetime"
+          description: "Actual delivery timestamp (after completion)"
+        - name: "temperature_log"
+          type: "file"
+          description: "Temperature log PDF (if temperature-controlled)"
+        - name: "pod_document"
+          type: "file"
+          description: "Signed Proof of Delivery (PDF)"
+      confidence_included: false
+
+      examples:
+        - scenario: "Standard pharmaceutical shipment Basel to Rotterdam"
+          input:
+            pickup_location: "4058 Basel, Switzerland"
+            pickup_date: "2026-03-20"
+            delivery_location: "3015 Rotterdam, Netherlands"
+            delivery_date_latest: "2026-03-23"
+            pallet_count: 8
+            total_weight_kg: 6400
+            goods_description: "Pharmaceutical products, non-hazardous"
+            temperature_required: true
+            temperature_target: 5
+          output:
+            tracking_id: "TL-2026-08841"
+            pickup_confirmed: "2026-03-20T08:00:00+01:00"
+            estimated_delivery: "2026-03-22T14:00:00+01:00"
+
+    preconditions:
+      - condition: "Pallet count between 5 and 15"
+        on_failure: "reject"
+        agent_instruction: "For fewer than 5 pallets, use the parcel-pallet
+                           service. For more than 15, use FTL."
+      - condition: "Pickup date at least 24h in the future"
+        on_failure: "reject"
+        agent_instruction: "Same-day pickup is not available for LTL.
+                           Contact the provider directly for emergency transport."
+      - condition: "No dangerous goods classes 1, 6, 7"
+        on_failure: "reject"
+        agent_instruction: "This provider does not transport these
+                           dangerous goods classes."
+
+    postconditions:
+      - guarantee: "Tracking updates every 30 minutes from pickup to delivery"
+      - guarantee: "Temperature log provided within 2h of delivery
+                   (temperature-controlled shipments only)"
+      - guarantee: "Digital POD within 2h of delivery"
+
+  delivery:
+    mode: "async_tracked"
+    tracking:
+      status_endpoint: true
+      webhook_support: true
+      update_frequency: "every 30 minutes"
+    human_involvement:
+      disclosed: true
+      typical_touchpoints: 3
+
+  governance:
+    access:
+      authentication_required: true
+      authorization_model: "api_key"
+      agent_registration_required: true
+    data:
+      input_sensitivity: "internal"
+      output_sensitivity: "internal"
+      pii_fields: []
+      retention_period: "7 years"
+      deletion_on_request: false
+    compliance:
+      regulations: ["GDP", "CMR Convention"]
+      audit_trail: true
+
+  lifecycle:
+    created: "2025-01-15"
+    last_modified: "2026-02-01"
+    changelog:
+      - version: "2.1.0"
+        date: "2026-02-01"
+        changes: "Added express delivery option and insurance field"
+      - version: "2.0.0"
+        date: "2025-08-01"
+        changes: "Migrated to OSP format from internal specification"
+      - version: "1.0.0"
+        date: "2025-01-15"
+        changes: "Initial version"
+    review:
+      next_review: "2026-08-01"
+      review_cycle: "semi-annually"

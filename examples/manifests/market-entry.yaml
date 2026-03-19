@@ -1,0 +1,221 @@
+osp_version: "0.1"
+
+service:
+  identity:
+    id: "strategyworks.consulting.market-entry"
+    name: "Market Entry Strategy"
+    version: "1.0.0"
+    status: "active"
+    maturity: "assisted"
+    summary: |
+      Strategic advisory for mid-market companies planning entry
+      into new geographic markets or customer segments. Covers
+      market analysis, partner evaluation, regulatory assessment,
+      and go-to-market planning.
+    when_to_use: |
+      Suitable for companies with CHF 50-500M revenue considering
+      expansion into a new country or market segment. Particularly
+      strong in US, UK, and APAC market entry for DACH-based
+      industrial and technology companies. Engagements are
+      multi-phase: each phase can be ordered independently.
+    when_not_to_use: |
+      Not suitable for early-stage startups (< CHF 5M revenue),
+      for market entries requiring only desk research (use a
+      research provider instead), or for markets where we lack
+      expertise (Africa, South America — we can refer partners).
+      Not a substitute for legal or tax advisory.
+    tags: ["consulting", "strategy", "market-entry", "internationalization"]
+    domain: "consulting"
+    service_family: "strategy"
+    engagement_type: "consultative"
+
+  evaluation:
+    capacity:
+      min_engagement_days: 10
+      typical_engagement_weeks: 6
+      max_parallel_engagements: 3
+      team_size_range: [2, 4]
+
+    geography:
+      service_regions: ["CH", "DE", "AT"]
+      target_market_expertise: ["US", "UK", "CN", "JP", "SG", "AU",
+                                "DE", "FR", "IT", "NL", "SE", "NO"]
+
+    performance:
+      standard_leadtime: "6-10 weeks for full engagement"
+      completion_rate: 0.98
+      average_quality_score: 4.7
+      sample_size: 86
+      sample_period: "36 months"
+
+    pricing:
+      model: "per_project"
+      currency: "CHF"
+      indicative_range:
+        min: 45000
+        max: 180000
+        note: "Depends on target market complexity, number of
+               phases ordered, and depth of regulatory analysis.
+               Phase 1 alone typically CHF 35,000-55,000."
+      token_pricing_available: false
+
+    certifications: []
+
+    sla:
+      response_time: "< 5 business days for proposal"
+      quality_guarantee: |
+        If the delivered market analysis contains factual errors
+        that materially affect the strategic recommendation, the
+        affected section will be revised at no additional cost.
+
+    confidence_note: |
+      Quality score based on post-engagement client surveys
+      (86 engagements, 36 months). Response time for proposals
+      depends on current capacity and may be longer during
+      Q4 (October-December).
+
+  contract:
+    engagement:
+      type: "consultative"
+      quote_binding: false
+      quote_validity: "10 business days"
+      multi_phase: true
+      initial_phase_independent: true
+      scope_negotiation: |
+        The quote request describes the business context and
+        objectives. We respond with a structured proposal
+        including phased approach, timeline, team composition,
+        and pricing per phase. Scope adjustments are possible
+        after Phase 1 based on findings.
+
+    input:
+      required_fields:
+        - name: "company_context"
+          type: "string"
+          description: "Description of the company: industry, size,
+                       current markets, products/services"
+        - name: "target_market"
+          type: "string"
+          description: "Geographic market or customer segment
+                       being considered for entry"
+        - name: "objectives"
+          type: "string"
+          description: "What the company wants to achieve and
+                       key questions to be answered"
+
+      optional_fields:
+        - name: "timeline"
+          type: "string"
+          description: "Desired timeline for the engagement"
+          default: "8 weeks"
+        - name: "budget_range"
+          type: "string"
+          description: "Indicative budget range for the full engagement"
+        - name: "existing_research"
+          type: "file"
+          description: "Any existing market research or internal
+                       analysis that should be considered"
+          constraints:
+            accepted_formats: ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
+            max_size_mb: 25
+        - name: "regulatory_focus"
+          type: "string"
+          description: "Specific regulatory areas of concern
+                       (e.g., FDA approval, CE marking)"
+        - name: "partner_preferences"
+          type: "string"
+          description: "Preferences regarding market entry model
+                       (JV, distributor, own entity)"
+
+    output:
+      fields:
+        - name: "deliverable_document"
+          type: "file"
+          description: "Strategy document (PDF)"
+        - name: "executive_summary"
+          type: "string"
+          description: "2-page summary of findings and recommendations"
+        - name: "recommended_option"
+          type: "string"
+          description: "The recommended market entry approach
+                       with rationale"
+        - name: "risk_assessment"
+          type: "string"
+          description: "Key risks and mitigation strategies"
+        - name: "financial_projection"
+          type: "object"
+          description: "Revenue and cost projections for the
+                       recommended approach (3-year horizon)"
+        - name: "confidence"
+          type: "enum"
+          description: "Confidence level of the recommendation"
+      confidence_included: true
+
+      examples:
+        - scenario: "Industrial company entering the US market"
+          input:
+            company_context: "CNC machine manufacturer, CHF 120M revenue,
+                             strong in DACH and France, 280 employees"
+            target_market: "United States, specifically dental industry"
+            objectives: "Evaluate market potential, identify entry model
+                        (distributor vs. own entity), assess FDA requirements"
+          output:
+            executive_summary: "[2-page summary of US dental CNC market]"
+            recommended_option: "Distributor model with regional exclusivity,
+                                transitioning to own entity after 24 months"
+            confidence: "high"
+
+    preconditions:
+      - condition: "Company revenue above CHF 5M"
+        on_failure: "reject"
+        agent_instruction: "This service is designed for established
+                           mid-market companies. For early-stage companies,
+                           consider a lighter research service."
+      - condition: "Target market within provider's expertise"
+        on_failure: "degrade"
+        agent_instruction: "If the target market is not listed in
+                           target_market_expertise, the provider may
+                           still accept but with longer timelines and
+                           potentially with partner involvement."
+
+    postconditions:
+      - guarantee: "Deliverable reviewed by Senior Partner before delivery"
+      - guarantee: "All quantitative claims in the report are sourced"
+      - guarantee: "One revision round included within 10 business days
+                   of delivery"
+
+  delivery:
+    mode: "interactive"
+    interaction:
+      input_requests_possible: true
+      review_points: true
+      max_interactions: 8
+    human_involvement:
+      disclosed: true
+      typical_touchpoints: 12
+
+  governance:
+    access:
+      authentication_required: true
+      authorization_model: "api_key"
+      agent_registration_required: true
+    data:
+      input_sensitivity: "confidential"
+      output_sensitivity: "confidential"
+      pii_fields: []
+      retention_period: "24 months"
+      deletion_on_request: true
+    compliance:
+      regulations: ["DSG", "GDPR"]
+      audit_trail: true
+
+  lifecycle:
+    created: "2026-01-10"
+    last_modified: "2026-03-01"
+    changelog:
+      - version: "1.0.0"
+        date: "2026-01-10"
+        changes: "Initial OSP publication"
+    review:
+      next_review: "2026-07-01"
+      review_cycle: "semi-annually"
