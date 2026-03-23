@@ -1,0 +1,216 @@
+osp_version: "0.1"
+
+service:
+  identity:
+    id: "distll.advisory.skill-formalization"
+    name: "Service Decomposition & Skill Formalization"
+    version: "1.1.0"
+    status: "active"
+    maturity: "assisted"
+    summary: |
+      Breaks down prioritized services into atomic, machine-readable
+      skills. Uses three complementary extraction methods: adaptive
+      expert interviews (3-round protocol for tacit knowledge),
+      automated catalog conversion (ServiceNow, SAP, and similar
+      systems), and digital artifact analysis (screenshots, Excel
+      tools, process documentation). Output: validated skill
+      documents in OSP-compliant YAML format.
+    when_to_use: |
+      After a Service Cartography has identified which services to
+      formalize, or when a company already knows which services it
+      wants to make agent-ready. Particularly effective when the
+      company operates ServiceNow, SAP, or similar catalog systems —
+      the automated conversion accelerates the process by 40-60%
+      compared to pure interview-based extraction. Also suitable
+      when process documentation exists but is incomplete or outdated.
+    when_not_to_use: |
+      Not suitable if the company has no clarity on which services
+      to formalize — do an Assessment first. Not cost-effective for
+      fewer than 3 services. Not a replacement for business process
+      reengineering — we document what exists, we don't redesign it.
+    tags: ["skill-formalization", "interview", "knowledge-extraction",
+           "servicenow", "sap", "catalog-conversion"]
+    domain: "consulting"
+    service_family: "service-as-a-software"
+    engagement_type: "consultative"
+
+  evaluation:
+    capacity:
+      typical_skills_per_service: [3, 12]
+      typical_services_per_engagement: [3, 15]
+      max_parallel_engagements: 2
+      team_size: [1, 2]
+      extraction_methods:
+        - "Adaptive expert interviews (3-round protocol)"
+        - "Automated catalog conversion (ServiceNow, SAP, ITSM tools)"
+        - "Digital artifact analysis (screenshots, Excel, documents)"
+      supported_catalog_systems:
+        - "ServiceNow (ITSM, CSM, ITOM service catalogs)"
+        - "SAP (Solution Manager, S/4HANA service modules)"
+        - "Jira Service Management"
+        - "BMC Helix / Remedy"
+        - "Custom catalogs (CSV/Excel exports)"
+
+    geography:
+      service_regions: ["CH", "DE", "AT"]
+
+    performance:
+      standard_leadtime: "3-6 weeks per service cluster (5-8 services)"
+      catalog_conversion_leadtime: "1-2 weeks for initial automated extraction"
+      completion_rate: 1.0
+      sample_size: 9
+      sample_period: "15 months"
+
+    pricing:
+      model: "per_project"
+      currency: "CHF"
+      indicative_range:
+        min: 20000
+        max: 80000
+        note: "Depends on number of services, availability of existing
+               catalogs, and complexity of decision logic. Companies
+               with ServiceNow/SAP catalogs save 40-60% compared to
+               pure interview-based extraction. 3-5 simple services
+               at the lower end, 15+ complex services at the upper end."
+
+    sla:
+      response_time: "< 3 business days for proposal"
+      quality_guarantee: |
+        Every skill document validated against the OSP JSON Schema.
+        Interview-based skills traced to source (interview round,
+        timestamp, expert). Catalog-converted skills verified with
+        at least one domain expert. One revision round included.
+
+    confidence_note: |
+      Based on 9 completed skill formalization engagements. Catalog
+      conversion from ServiceNow has been tested with 4 clients;
+      SAP conversion with 2. The 40-60% acceleration claim is based
+      on comparing hybrid (catalog + interview) vs. pure interview
+      engagements of similar scope.
+
+  contract:
+    engagement:
+      type: "consultative"
+      quote_binding: false
+      quote_validity: "10 business days"
+      multi_phase: true
+      initial_phase_independent: true
+      scope_negotiation: |
+        The request describes the services to be formalized and the
+        available source systems. We propose a phased approach:
+        Phase 1 covers automated catalog extraction and gap analysis.
+        Phase 2 covers expert interviews for tacit knowledge and
+        edge cases. Phases can be ordered independently.
+
+    input:
+      required_fields:
+        - name: "services_to_formalize"
+          type: "string"
+          description: "List of services to be decomposed into skills,
+                       with brief description of each"
+        - name: "available_sources"
+          type: "string"
+          description: "What source systems and documentation exist?
+                       ServiceNow instance, SAP modules, process docs,
+                       Excel tools, other"
+      optional_fields:
+        - name: "catalog_export"
+          type: "file"
+          description: "Export from ServiceNow, SAP, or other catalog
+                       system (CSV, JSON, XML, or PDF)"
+          constraints:
+            accepted_formats: ["text/csv", "application/json",
+              "application/xml", "application/pdf"]
+            max_size_mb: 100
+        - name: "process_documentation"
+          type: "file"
+          description: "Existing process documentation, SOPs, checklists"
+          constraints:
+            max_size_mb: 50
+        - name: "expert_availability"
+          type: "string"
+          description: "How many domain experts are available for
+                       interviews, and at what capacity?"
+        - name: "assessment_results"
+          type: "file"
+          description: "Results from a prior distll Assessment, if available"
+
+    output:
+      fields:
+        - name: "skill_documents"
+          type: "file"
+          description: "OSP-compliant YAML skill manifests for each
+                       identified skill"
+        - name: "skill_catalog"
+          type: "file"
+          description: "Overview of all skills with dependencies,
+                       maturity assessment, and grouping"
+        - name: "gap_analysis"
+          type: "file"
+          description: "What was extracted from catalogs vs. what
+                       required expert interviews. Identifies areas
+                       where documentation is insufficient."
+        - name: "source_traceability"
+          type: "file"
+          description: "For each field in each skill document: source
+                       (catalog, interview round/timestamp, artifact)"
+      confidence_included: true
+
+    preconditions:
+      - condition: "At least 3 services identified for formalization"
+        on_failure: "reject"
+        agent_instruction: "For fewer than 3 services, the overhead of a
+                           formal engagement is not justified. Use the OSP
+                           templates and documentation to self-formalize."
+      - condition: "At least one domain expert per service available for
+                   30-60 minute interview"
+        on_failure: "degrade"
+        agent_instruction: "Without expert access, formalization relies
+                           solely on catalog data and documentation.
+                           Quality of when_to_use/when_not_to_use fields
+                           and edge case coverage will be limited."
+
+    postconditions:
+      - guarantee: "All skill documents validated against OSP v0.1 JSON Schema"
+      - guarantee: "Every field traceable to a documented source"
+      - guarantee: "Catalog-converted skills verified by at least one expert"
+      - guarantee: "One revision round within 10 business days included"
+
+  delivery:
+    mode: "interactive"
+    interaction:
+      input_requests_possible: true
+      review_points: true
+      max_interactions: 10
+    human_involvement:
+      disclosed: true
+      typical_touchpoints: 12
+
+  governance:
+    access:
+      authentication_required: true
+      authorization_model: "api_key"
+      agent_registration_required: true
+    data:
+      input_sensitivity: "confidential"
+      output_sensitivity: "confidential"
+      retention_period: "24 months"
+      deletion_on_request: true
+    compliance:
+      regulations: ["DSG", "GDPR"]
+      audit_trail: true
+
+  lifecycle:
+    created: "2026-03-19"
+    last_modified: "2026-03-23"
+    changelog:
+      - version: "1.1.0"
+        date: "2026-03-23"
+        changes: "Added automated catalog conversion (ServiceNow, SAP)
+                 as extraction method alongside expert interviews"
+      - version: "1.0.0"
+        date: "2026-03-19"
+        changes: "Initial publication"
+    review:
+      next_review: "2026-09-01"
+      review_cycle: "semi-annually"

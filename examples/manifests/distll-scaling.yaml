@@ -1,0 +1,157 @@
+osp_version: "0.1"
+
+service:
+  identity:
+    id: "distll.advisory.scaling"
+    name: "Scaling & Maturity Coaching"
+    version: "1.0.0"
+    status: "active"
+    maturity: "human"
+    summary: |
+      Ongoing advisory for expanding the skill catalog (horizontal
+      scaling) and advancing existing skills to higher maturity
+      levels (vertical scaling). Includes coaching on graduation
+      criteria, rollback triggers, feedback loop design, and
+      organizational change management. Retainer-based engagement
+      with monthly touchpoints.
+    when_to_use: |
+      After a successful Pilot with 3-5 live skills. The company
+      wants to scale to 15-20+ skills, move skills from maturity
+      level 1-2 toward level 3-4, and build internal capability
+      to continue the transformation independently. Also suitable
+      when a Pilot is live but the team struggles with maturity
+      progression or organizational resistance.
+    when_not_to_use: |
+      Not before a Pilot has been completed — without live
+      operational experience, scaling advice is theoretical.
+      Not suitable if the company wants someone to do the
+      scaling work for them — this is coaching, not execution.
+      We train and advise, the client's team does the work.
+    tags: ["scaling", "maturity", "coaching", "change-management", "retainer"]
+    domain: "consulting"
+    service_family: "service-as-a-software"
+    engagement_type: "continuous"
+
+  evaluation:
+    capacity:
+      max_parallel_engagements: 4
+      team_size: [1, 1]
+      typical_monthly_hours: [8, 16]
+
+    geography:
+      service_regions: ["CH", "DE", "AT"]
+
+    performance:
+      standard_leadtime: "ongoing, monthly cadence"
+      typical_engagement_duration: "6-12 months"
+      sample_size: 4
+      sample_period: "12 months"
+
+    pricing:
+      model: "subscription"
+      currency: "CHF"
+      indicative_range:
+        min: 4000
+        max: 12000
+        note: "Monthly retainer. 8h/month at the lower end (monthly
+               review, ad-hoc advice), 16h/month at the upper end
+               (active coaching, workshop facilitation, maturity
+               assessments). Minimum commitment: 3 months."
+
+    sla:
+      response_time: "< 1 business day for ad-hoc questions"
+      quality_guarantee: |
+        Monthly maturity dashboard provided. Quarterly review
+        of skill portfolio with concrete recommendations.
+        If no measurable progress on the agreed KPIs within
+        3 months, engagement can be terminated without notice.
+
+    confidence_note: |
+      Based on 4 active retainer engagements. The service is
+      relatively new — clients who completed Pilots in 2025/26
+      are now in the scaling phase. Early results show that
+      companies with dedicated Skill Owners progress 2x faster
+      than those without.
+
+  contract:
+    engagement:
+      type: "continuous"
+      minimum_term: "3 months"
+      notice_period: "1 month"
+      individual_orders: false
+
+    input:
+      required_fields:
+        - name: "current_state"
+          type: "string"
+          description: "Number of live skills, their maturity levels,
+                       key metrics (volume, error rate, automation degree)"
+        - name: "scaling_goals"
+          type: "string"
+          description: "Target: how many skills, which maturity levels,
+                       in what timeframe?"
+      optional_fields:
+        - name: "pilot_results"
+          type: "file"
+          description: "Metrics and learnings from the Pilot phase"
+        - name: "organizational_context"
+          type: "string"
+          description: "Team structure, available resources, known
+                       resistance or challenges"
+
+    output:
+      fields:
+        - name: "monthly_maturity_dashboard"
+          type: "file"
+          description: "Skill portfolio overview with maturity
+                       distribution, error rates, and progress trends"
+        - name: "quarterly_review"
+          type: "file"
+          description: "Detailed assessment with recommendations
+                       for the next quarter"
+        - name: "coaching_notes"
+          type: "string"
+          description: "Documented advice and decisions from each
+                       monthly session"
+      confidence_included: false
+
+    postconditions:
+      - guarantee: "Monthly maturity dashboard delivered by 5th
+                   business day of each month"
+      - guarantee: "Quarterly review includes concrete, actionable
+                   recommendations"
+
+  delivery:
+    mode: "async_tracked"
+    tracking:
+      status_endpoint: true
+      webhook_support: false
+      update_frequency: "monthly"
+    human_involvement:
+      disclosed: true
+      typical_touchpoints: 4
+
+  governance:
+    access:
+      authentication_required: true
+      authorization_model: "api_key"
+      agent_registration_required: true
+    data:
+      input_sensitivity: "confidential"
+      output_sensitivity: "internal"
+      retention_period: "duration of contract + 12 months"
+      deletion_on_request: true
+    compliance:
+      regulations: ["DSG", "GDPR"]
+      audit_trail: true
+
+  lifecycle:
+    created: "2026-03-19"
+    last_modified: "2026-03-23"
+    changelog:
+      - version: "1.0.0"
+        date: "2026-03-19"
+        changes: "Initial publication"
+    review:
+      next_review: "2026-09-01"
+      review_cycle: "semi-annually"

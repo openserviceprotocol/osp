@@ -1,0 +1,197 @@
+osp_version: "0.1"
+
+service:
+  identity:
+    id: "distll.advisory.assessment"
+    name: "Service Cartography & Assessment"
+    version: "1.0.0"
+    status: "active"
+    maturity: "assisted"
+    summary: |
+      Systematic inventory of all services a company delivers,
+      evaluated by agent-relevance, automation potential, and
+      volume. Combines top-down analysis (product catalogs,
+      contracts, org charts), bottom-up discovery (ticket systems,
+      CRM, email flows), and outside-in validation (customer
+      perception). Delivers a prioritized service map and
+      transformation roadmap.
+    when_to_use: |
+      For companies with 50+ employees that generate a significant
+      share of their value through human-delivered services and want
+      to make them accessible to AI agents. Particularly relevant
+      for service businesses (logistics, consulting, insurance,
+      facility management, IT services, staffing) that lack a
+      structured overview of their service landscape or whose
+      existing documentation is outdated.
+    when_not_to_use: |
+      Not suitable for companies that primarily sell physical
+      products with no significant service component. Not needed
+      if a current, granular service documentation already exists —
+      in that case, start directly with Skill Formalization. Not
+      worthwhile for fewer than 5 identifiable services (not enough
+      substance for a meaningful prioritization).
+    tags: ["consulting", "assessment", "service-mapping", "transformation"]
+    domain: "consulting"
+    service_family: "service-as-a-software"
+    engagement_type: "consultative"
+
+  evaluation:
+    capacity:
+      typical_services_analyzed: [10, 80]
+      min_company_size_employees: 50
+      max_parallel_engagements: 2
+      team_size: [1, 2]
+
+    geography:
+      service_regions: ["CH", "DE", "AT"]
+
+    performance:
+      standard_leadtime: "4-6 weeks"
+      completion_rate: 1.0
+      sample_size: 12
+      sample_period: "18 months"
+
+    pricing:
+      model: "per_project"
+      currency: "CHF"
+      indicative_range:
+        min: 25000
+        max: 65000
+        note: "Depends on number of service families, availability
+               of existing documentation, and number of experts to
+               interview. Companies with 5-15 services at the lower
+               end, 30+ services at the upper end."
+
+    sla:
+      response_time: "< 3 business days for proposal"
+      quality_guarantee: |
+        Service map validated from at least two independent sources
+        (top-down analysis and expert interviews). If material
+        services within the agreed scope are missing, rework is
+        included at no additional cost.
+
+    confidence_note: |
+      Based on 12 completed assessments. Price range is wide
+      because complexity varies significantly — an IT provider
+      with 8 well-defined products is faster to analyze than an
+      insurance company with 40 inconsistently handled processes.
+
+  contract:
+    engagement:
+      type: "consultative"
+      quote_binding: false
+      quote_validity: "10 business days"
+      scope_negotiation: |
+        The request describes the company, its industry, and the
+        approximate number of services. We respond with a proposal
+        defining approach, timeline, required interview partners,
+        and fixed price. A free 45-minute initial consultation
+        precedes the proposal.
+
+    input:
+      required_fields:
+        - name: "company_description"
+          type: "string"
+          description: "Industry, size, business model, main customer segments"
+        - name: "service_landscape_estimate"
+          type: "string"
+          description: "Rough estimate: How many different services does
+                       the company deliver? Which are the most important?"
+        - name: "transformation_goal"
+          type: "string"
+          description: "What should happen with the results? Agent-readiness,
+                       automation, standardization, or a combination?"
+      optional_fields:
+        - name: "existing_documentation"
+          type: "file"
+          description: "Existing process documentation, product catalogs,
+                       org charts, ServiceNow/SAP exports"
+          constraints:
+            accepted_formats: ["application/pdf",
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              "application/vnd.openxmlformats-officedocument.presentationml.presentation"]
+            max_size_mb: 50
+        - name: "priority_services"
+          type: "string"
+          description: "Services that should be treated with priority"
+        - name: "budget_range"
+          type: "string"
+          description: "Indicative budget for the assessment"
+
+    output:
+      fields:
+        - name: "service_map"
+          type: "file"
+          description: "Visual and structured map of all identified services,
+                       grouped into service families"
+        - name: "prioritization_matrix"
+          type: "file"
+          description: "Each service rated on volume, standardizability,
+                       agent-relevance, and transformation effort"
+        - name: "transformation_roadmap"
+          type: "file"
+          description: "Recommended sequence and timeline with effort
+                       estimates per service cluster"
+        - name: "quick_wins"
+          type: "string"
+          description: "Services that can be brought to maturity level 1
+                       (Human Skill) with minimal effort"
+        - name: "executive_summary"
+          type: "string"
+          description: "Management-level summary with key findings and
+                       recommendation"
+      confidence_included: true
+
+    preconditions:
+      - condition: "Company delivers at least 5 identifiable services"
+        on_failure: "reject"
+        agent_instruction: "For fewer than 5 services, a formal assessment
+                           is not cost-effective. Start directly with
+                           Skill Formalization for individual services."
+      - condition: "At least 2 domain experts available for interviews"
+        on_failure: "degrade"
+        agent_instruction: "The assessment is possible but service map
+                           quality is limited with only one perspective.
+                           Recommend at least 3 experts from different areas."
+
+    postconditions:
+      - guarantee: "Service map validated from at least two independent sources"
+      - guarantee: "Every identified service rated across all four
+                   prioritization dimensions"
+      - guarantee: "Roadmap contains concrete next steps with effort estimates"
+      - guarantee: "One revision round within 10 business days included"
+
+  delivery:
+    mode: "interactive"
+    interaction:
+      input_requests_possible: true
+      review_points: true
+      max_interactions: 6
+    human_involvement:
+      disclosed: true
+      typical_touchpoints: 8
+
+  governance:
+    access:
+      authentication_required: true
+      authorization_model: "api_key"
+      agent_registration_required: true
+    data:
+      input_sensitivity: "confidential"
+      output_sensitivity: "confidential"
+      retention_period: "24 months"
+      deletion_on_request: true
+    compliance:
+      regulations: ["DSG", "GDPR"]
+      audit_trail: true
+
+  lifecycle:
+    created: "2026-03-19"
+    last_modified: "2026-03-23"
+    changelog:
+      - version: "1.0.0"
+        date: "2026-03-19"
+        changes: "Initial publication"
+    review:
+      next_review: "2026-09-01"
+      review_cycle: "semi-annually"

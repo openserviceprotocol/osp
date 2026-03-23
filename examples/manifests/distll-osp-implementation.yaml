@@ -1,0 +1,200 @@
+osp_version: "0.1"
+
+service:
+  identity:
+    id: "distll.advisory.osp-implementation"
+    name: "OSP Implementation"
+    version: "1.0.0"
+    status: "active"
+    maturity: "assisted"
+    summary: |
+      Hands-on creation of osp.md files, service manifests, and
+      optional MCP integration. Makes a company's services
+      discoverable, evaluable, and orderable by AI agents via
+      the Open Service Protocol. The fastest path to agent-
+      readiness — results in 2-3 weeks.
+    when_to_use: |
+      For companies that want to make their services visible to
+      AI agents quickly, without going through the full
+      Service-as-a-Software transformation. Ideal as a standalone
+      engagement when the company already has reasonable clarity
+      about its services, or after an Assessment has been
+      completed. Particularly effective when existing service
+      documentation or catalogs (ServiceNow, SAP) can be used
+      as input.
+    when_not_to_use: |
+      Not suitable if the company has no clarity about its service
+      landscape — do an Assessment first. Not worthwhile for fewer
+      than 3 distinct services (the osp.md overhead is not
+      justified — use the OSP templates to self-create). Not a
+      substitute for Skill Formalization — this service creates
+      the external-facing OSP description, not the deep internal
+      skill documentation.
+    tags: ["osp", "implementation", "agent-readiness", "service-description",
+           "quick-start"]
+    domain: "consulting"
+    service_family: "service-as-a-software"
+    engagement_type: "transactional"
+
+  evaluation:
+    capacity:
+      typical_services_documented: [3, 20]
+      includes_manifests: true
+      includes_mcp_integration: true
+      includes_validation: true
+
+    geography:
+      service_regions: ["CH", "DE", "AT"]
+
+    performance:
+      standard_leadtime: "2-3 weeks"
+      completion_rate: 1.0
+      sample_size: 8
+      sample_period: "12 months"
+
+    pricing:
+      model: "per_project"
+      currency: "CHF"
+      indicative_range:
+        min: 15000
+        max: 35000
+        note: "Depends on number of services and quality of existing
+               documentation. 3-5 services with good input at the
+               lower end. 15+ services with patchy documentation at
+               the upper end. MCP integration adds approximately
+               CHF 5,000-10,000."
+
+    sla:
+      response_time: "< 3 business days for proposal"
+      quality_guarantee: |
+        Every service manifest validated against the OSP JSON
+        Schema. The osp.md is verified for token efficiency
+        (< 500 tokens). Deployment guide included. Rework within
+        10 business days at no additional cost.
+
+    confidence_note: |
+      Based on 8 completed OSP implementations. Leadtime of
+      2-3 weeks assumes domain experts are available for 30-60
+      minute interviews per service.
+
+  contract:
+    engagement:
+      type: "transactional"
+      quote_binding: true
+      quote_validity: "10 business days"
+
+    input:
+      required_fields:
+        - name: "company_description"
+          type: "string"
+          description: "Industry, size, key services"
+        - name: "service_list"
+          type: "string"
+          description: "List of services to be documented, with brief
+                       description of each"
+        - name: "target_audience"
+          type: "string"
+          description: "Which agents should find the services?
+                       Procurement agents, comparison platforms,
+                       internal agents?"
+      optional_fields:
+        - name: "existing_documentation"
+          type: "file"
+          description: "Existing service descriptions, product catalogs,
+                       API documentation, ServiceNow/SAP exports"
+          constraints:
+            accepted_formats: ["application/pdf",
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              "text/csv", "application/json"]
+            max_size_mb: 50
+        - name: "mcp_integration_needed"
+          type: "boolean"
+          description: "Whether services should also be exposed as
+                       MCP tools"
+          default: false
+        - name: "assessment_available"
+          type: "boolean"
+          description: "Whether a prior distll Assessment or comparable
+                       analysis exists"
+          default: false
+
+    output:
+      fields:
+        - name: "osp_md_file"
+          type: "file"
+          description: "Complete osp.md file, ready for publication
+                       at the website root"
+        - name: "service_manifests"
+          type: "file"
+          description: "YAML manifests for each documented service,
+                       validated against OSP Schema"
+        - name: "validation_report"
+          type: "file"
+          description: "Validation report with token counts and
+                       schema conformity for every file"
+        - name: "deployment_guide"
+          type: "file"
+          description: "Step-by-step instructions for publishing:
+                       file placement, DNS, llms.txt integration,
+                       optional MCP endpoint setup"
+        - name: "mcp_tool_definitions"
+          type: "file"
+          description: "MCP tool manifests for the documented
+                       services (if MCP integration ordered)"
+      confidence_included: false
+
+    preconditions:
+      - condition: "At least 3 services to document"
+        on_failure: "reject"
+        agent_instruction: "For fewer than 3 services, the overhead is
+                           not justified. Use the OSP templates and
+                           documentation to self-create — available at
+                           openserviceprotocol.org."
+      - condition: "Domain experts available for 30-60 minutes per service"
+        on_failure: "degrade"
+        agent_instruction: "Without expert access, documentation relies
+                           solely on existing materials. Quality of
+                           when_to_use/when_not_to_use fields and the
+                           evaluation section will be limited."
+
+    postconditions:
+      - guarantee: "All files validated against OSP v0.1 JSON Schema"
+      - guarantee: "osp.md file under 500 tokens"
+      - guarantee: "Each service manifest under 1,500 tokens"
+      - guarantee: "Deployment guide with concrete steps for publication"
+      - guarantee: "Rework within 10 business days included"
+
+  delivery:
+    mode: "async_tracked"
+    tracking:
+      status_endpoint: true
+      webhook_support: false
+      update_frequency: "at milestone completion"
+    human_involvement:
+      disclosed: true
+      typical_touchpoints: 5
+
+  governance:
+    access:
+      authentication_required: true
+      authorization_model: "api_key"
+      agent_registration_required: true
+    data:
+      input_sensitivity: "confidential"
+      output_sensitivity: "internal"
+      retention_period: "24 months"
+      deletion_on_request: true
+    compliance:
+      regulations: ["DSG", "GDPR"]
+      audit_trail: true
+
+  lifecycle:
+    created: "2026-03-19"
+    last_modified: "2026-03-23"
+    changelog:
+      - version: "1.0.0"
+        date: "2026-03-19"
+        changes: "Initial publication"
+    review:
+      next_review: "2026-09-01"
+      review_cycle: "semi-annually"

@@ -1,0 +1,175 @@
+osp_version: "0.1"
+
+service:
+  identity:
+    id: "distll.advisory.pilot"
+    name: "Pilot Implementation"
+    version: "1.0.0"
+    status: "active"
+    maturity: "assisted"
+    summary: |
+      Sets up the minimal technical infrastructure and launches
+      the first 3-5 skills in live operation. Skills start at
+      maturity level 1 (Human Skill — API facade with human
+      execution) and iterate toward level 2 (Assisted Skill —
+      AI prepares, human decides). Validates the entire
+      methodology in real operations.
+    when_to_use: |
+      After Assessment and Skill Formalization have produced a
+      prioritized set of formalized skills. The Pilot is the
+      transition from documentation to live operation. Suitable
+      when the company is ready to commit engineering resources
+      and a 6-8 week timeline. Most effective when starting with
+      high-volume, moderately complex services.
+    when_not_to_use: |
+      Not suitable if skills have not been formalized — the Pilot
+      builds on OSP-compliant skill documents. Not for companies
+      that want to automate everything at once — the Pilot is
+      deliberately limited to 3-5 skills. Not a substitute for
+      software development — we set up infrastructure and adapters,
+      not custom applications.
+    tags: ["implementation", "pilot", "infrastructure", "go-live"]
+    domain: "consulting"
+    service_family: "service-as-a-software"
+    engagement_type: "consultative"
+
+  evaluation:
+    capacity:
+      typical_skills_in_pilot: [3, 5]
+      typical_target_maturity: [1, 2]
+      max_parallel_engagements: 1
+      team_size: [1, 2]
+
+    geography:
+      service_regions: ["CH", "DE", "AT"]
+
+    performance:
+      standard_leadtime: "6-8 weeks"
+      completion_rate: 1.0
+      sample_size: 5
+      sample_period: "12 months"
+
+    pricing:
+      model: "per_project"
+      currency: "CHF"
+      indicative_range:
+        min: 35000
+        max: 80000
+        note: "Depends on number of skills, complexity of existing
+               IT landscape, and target maturity level. Includes
+               infrastructure setup (API gateway, task management,
+               logging, token ledger) and adapter development for
+               the pilot skills."
+
+    sla:
+      response_time: "< 3 business days for proposal"
+      quality_guarantee: |
+        Pilot skills are live and processing real requests by
+        the end of the engagement. Minimum 50 successful
+        transactions before handover. Issues discovered during
+        the first 30 days post-launch are addressed at no
+        additional cost.
+
+    confidence_note: |
+      Based on 5 completed pilots. The leadtime of 6-8 weeks
+      assumes that skill documents and orchestration models are
+      ready, and that the client's IT team is available for
+      integration work. Delays in IT access are the most common
+      cause of timeline overruns.
+
+  contract:
+    engagement:
+      type: "consultative"
+      quote_binding: false
+      quote_validity: "10 business days"
+
+    input:
+      required_fields:
+        - name: "skill_documents"
+          type: "file"
+          description: "Formalized skill documents for the pilot services"
+        - name: "orchestration_models"
+          type: "file"
+          description: "Orchestration models if services involve
+                       multi-skill workflows"
+        - name: "it_landscape"
+          type: "string"
+          description: "Overview of existing IT systems: ERP, CRM,
+                       ticketing, APIs, cloud infrastructure"
+      optional_fields:
+        - name: "existing_api_gateway"
+          type: "string"
+          description: "If an API gateway is already in place, which one?"
+        - name: "task_management_system"
+          type: "string"
+          description: "Existing system for task routing to human workers
+                       (Jira, ServiceNow, custom)"
+        - name: "it_team_capacity"
+          type: "string"
+          description: "Availability of client IT team for integration
+                       work during the pilot"
+
+    output:
+      fields:
+        - name: "infrastructure_setup"
+          type: "file"
+          description: "Documented infrastructure: API gateway, task
+                       routing, logging, token ledger configuration"
+        - name: "adapter_implementations"
+          type: "file"
+          description: "Working adapters connecting OSP endpoints to
+                       internal execution (human or automated)"
+        - name: "operations_playbook"
+          type: "file"
+          description: "Runbook for operating the pilot: monitoring,
+                       error handling, escalation procedures"
+        - name: "pilot_metrics"
+          type: "file"
+          description: "Dashboard setup for tracking volume, response
+                       times, error rates, and maturity indicators"
+        - name: "handover_documentation"
+          type: "file"
+          description: "Complete technical documentation for the
+                       client's team to operate independently"
+      confidence_included: true
+
+    postconditions:
+      - guarantee: "All pilot skills live and processing real requests"
+      - guarantee: "Minimum 50 successful transactions before handover"
+      - guarantee: "Logging and monitoring active from day one"
+      - guarantee: "30-day post-launch support included"
+
+  delivery:
+    mode: "interactive"
+    interaction:
+      input_requests_possible: true
+      review_points: true
+      max_interactions: 12
+    human_involvement:
+      disclosed: true
+      typical_touchpoints: 15
+
+  governance:
+    access:
+      authentication_required: true
+      authorization_model: "api_key"
+      agent_registration_required: true
+    data:
+      input_sensitivity: "confidential"
+      output_sensitivity: "confidential"
+      retention_period: "24 months"
+      deletion_on_request: true
+    compliance:
+      regulations: ["DSG", "GDPR"]
+      audit_trail: true
+
+  lifecycle:
+    created: "2026-03-19"
+    last_modified: "2026-03-23"
+    changelog:
+      - version: "1.0.0"
+        date: "2026-03-19"
+        changes: "Initial publication"
+    review:
+      next_review: "2026-09-01"
+      review_cycle: "semi-annually"

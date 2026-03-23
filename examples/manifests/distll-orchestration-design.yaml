@@ -1,0 +1,168 @@
+osp_version: "0.1"
+
+service:
+  identity:
+    id: "distll.advisory.orchestration-design"
+    name: "Orchestration Design"
+    version: "1.0.0"
+    status: "active"
+    maturity: "assisted"
+    summary: |
+      Designs how formalized skills compose into end-to-end
+      services. Defines workflow topology, decision points,
+      parallel execution, human-in-the-loop steps, error
+      handling, and compensation logic. Recommends choreographed,
+      agent-controlled, or hybrid orchestration per service.
+    when_to_use: |
+      After Skill Formalization has produced a set of skill
+      documents that need to be connected into functioning
+      workflows. Essential when a service consists of 4+ skills
+      with dependencies, branching logic, or human approval
+      steps. Particularly valuable for services that mix
+      automated and human-delivered components.
+    when_not_to_use: |
+      Not needed for single-skill services with no dependencies.
+      Not suitable if skills have not been formalized yet — do
+      Skill Formalization first. Not a substitute for technical
+      workflow engine implementation — we design the model, the
+      implementation happens in the Pilot phase.
+    tags: ["orchestration", "workflow", "service-composition", "hybrid"]
+    domain: "consulting"
+    service_family: "service-as-a-software"
+    engagement_type: "consultative"
+
+  evaluation:
+    capacity:
+      typical_services_orchestrated: [2, 8]
+      typical_skills_per_orchestration: [4, 20]
+      max_parallel_engagements: 2
+      team_size: [1, 2]
+
+    geography:
+      service_regions: ["CH", "DE", "AT"]
+
+    performance:
+      standard_leadtime: "2-4 weeks per service"
+      completion_rate: 1.0
+      sample_size: 7
+      sample_period: "12 months"
+
+    pricing:
+      model: "per_project"
+      currency: "CHF"
+      indicative_range:
+        min: 15000
+        max: 50000
+        note: "Depends on number of services to orchestrate and
+               complexity of decision logic. A linear 5-skill
+               workflow at the lower end, a 15-skill workflow with
+               parallel branches and multiple human-in-the-loop
+               steps at the upper end."
+
+    sla:
+      response_time: "< 3 business days for proposal"
+      quality_guarantee: |
+        Every orchestration model is validated against the
+        formalized skill documents for interface consistency.
+        Error handling covers all identified failure modes.
+        One revision round included.
+
+    confidence_note: |
+      Based on 7 completed orchestration designs. This is the
+      newest service in our portfolio — sample size is limited
+      but growing. Orchestration models have been successfully
+      implemented in 5 of 7 cases.
+
+  contract:
+    engagement:
+      type: "consultative"
+      quote_binding: false
+      quote_validity: "10 business days"
+
+    input:
+      required_fields:
+        - name: "skill_documents"
+          type: "file"
+          description: "Formalized skill documents (OSP YAML) to
+                       be orchestrated"
+        - name: "service_description"
+          type: "string"
+          description: "End-to-end description of the service from
+                       trigger to completion"
+      optional_fields:
+        - name: "existing_process_flows"
+          type: "file"
+          description: "Current process diagrams, BPMN models, or
+                       workflow definitions"
+        - name: "human_approval_requirements"
+          type: "string"
+          description: "Which decisions require human sign-off and
+                       at what thresholds?"
+        - name: "target_architecture"
+          type: "string"
+          description: "Preferred orchestration technology if any
+                       (workflow engine, agent framework, etc.)"
+
+    output:
+      fields:
+        - name: "orchestration_models"
+          type: "file"
+          description: "YAML orchestration models per service,
+                       including workflow graph, input mapping,
+                       error handling, and compensation"
+        - name: "architecture_recommendation"
+          type: "string"
+          description: "Recommended orchestration approach per service
+                       (choreographed, agent-controlled, or hybrid)
+                       with rationale"
+        - name: "interface_validation"
+          type: "file"
+          description: "Report confirming all skill interfaces are
+                       compatible within the orchestration"
+        - name: "failure_mode_catalog"
+          type: "file"
+          description: "All identified failure modes with handling
+                       strategy and compensation logic"
+      confidence_included: true
+
+    postconditions:
+      - guarantee: "All skill interfaces validated for compatibility"
+      - guarantee: "Error handling defined for every identified failure mode"
+      - guarantee: "Human-in-the-loop steps include escalation chains
+                   with time-based triggers"
+      - guarantee: "One revision round within 10 business days included"
+
+  delivery:
+    mode: "interactive"
+    interaction:
+      input_requests_possible: true
+      review_points: true
+      max_interactions: 6
+    human_involvement:
+      disclosed: true
+      typical_touchpoints: 6
+
+  governance:
+    access:
+      authentication_required: true
+      authorization_model: "api_key"
+      agent_registration_required: true
+    data:
+      input_sensitivity: "confidential"
+      output_sensitivity: "confidential"
+      retention_period: "24 months"
+      deletion_on_request: true
+    compliance:
+      regulations: ["DSG", "GDPR"]
+      audit_trail: true
+
+  lifecycle:
+    created: "2026-03-19"
+    last_modified: "2026-03-23"
+    changelog:
+      - version: "1.0.0"
+        date: "2026-03-19"
+        changes: "Initial publication"
+    review:
+      next_review: "2026-09-01"
+      review_cycle: "semi-annually"
