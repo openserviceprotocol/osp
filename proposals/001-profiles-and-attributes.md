@@ -1,8 +1,11 @@
 # RFC-001: Domain Profiles and Attributes
 
-- **Status:** Draft
+- **Status:** Accepted — implemented in OSP v0.2 (2026-04-24)
 - **Target:** OSP v0.2
 - **Relates to:** `spec/service-manifest-reference.md`, `schemas/service-manifest.schema.json`
+- **Implemented by:** `spec/profiles.md`, `profiles/`, `profiles/registry/`, `tools/validate.py`
+
+> This RFC is retained as a historical record. The specification itself lives in [`spec/profiles.md`](../spec/profiles.md); the schema changes are in `schemas/service-manifest.schema.json`; the pilot profiles are published under `profiles/`. Registry hosting at `profiles.openserviceprotocol.org` is pending website deployment.
 
 ## Problem
 

@@ -1,0 +1,56 @@
+# OSP Profile Registry
+
+> Community-maintained, branch-specific vocabularies for OSP service manifests. Each profile is a versioned JSON Schema that defines the decisive parameters for one industry (e.g., temperature range for cold-chain logistics, practice areas for legal advisory, supply mix for energy retail). Providers declare conformance in their manifest under `service.profiles`; the fields live under `service.evaluation.attributes`. Agents that understand a profile can compare providers apples-to-apples within that branch.
+
+## Available Profiles
+
+- [General Logistics](https://profiles.openserviceprotocol.org/logistics-general/v1.schema.json) (v1.0.0): Freight and shipping — transport modes, unit types, hazmat classes, equipment, customs, pickup/delivery mode, tracking depth, POD types. Required: `transport_modes`, `service_scope`.
+- [Cold Chain Logistics](https://profiles.openserviceprotocol.org/cold-chain-logistics/v1.schema.json) (v1.0.0): Temperature-controlled transport — range, logging resolution, excursion policy, GDP/USP qualifications, packaging types, MKT reporting. Composable with General Logistics. Required: `temperature_range_celsius`, `temperature_logging`.
+- [Consulting](https://profiles.openserviceprotocol.org/consulting/v1.schema.json) (v1.0.0): Strategy and advisory — practice areas, engagement models, industry depth, target-market expertise, methodology style, implementation capability. Required: `practice_areas`, `engagement_models`.
+- [IT Managed Services](https://profiles.openserviceprotocol.org/it-managed-services/v1.schema.json) (v1.0.0): Managed hosting, databases, Kubernetes, SRE-on-demand — cloud providers, SLA tiers, support coverage, DR RTO/RPO, security certifications, patch management, data residency, agent-ops enablement. Required: `service_categories`, `cloud_providers`.
+- [Legal Advisory](https://profiles.openserviceprotocol.org/legal-advisory/v1.schema.json) (v1.0.0): Legal services — jurisdictions (ISO incl. subdivisions), practice areas, matter types, court representation, bar admissions, privilege regime, conflict-check process. Required: `jurisdictions`, `practice_areas`.
+- [Energy Supply](https://profiles.openserviceprotocol.org/energy-supply/v1.schema.json) (v1.0.0): Energy retail — commodity, supply mix, carbon intensity, green certifications (naturemade, TÜV, GO/REGO, I-REC), tariff model, consumption range, voltage levels. Required: `commodity`, `consumer_segments`.
+- [Cleaning Services](https://profiles.openserviceprotocol.org/cleaning-services/v1.schema.json) (v1.0.0): Facility cleaning — service types, specializations (medical, cleanroom up to ISO Class 7, food), surface types, chemical standards (hospital-grade, EU Ecolabel), waste handling (including biohazard), access models, staff vetting. Required: `service_types`, `frequency_options`.
+
+## Canonical Resources
+
+- [Machine-readable index (JSON)](https://profiles.openserviceprotocol.org/registry/index.json): structured data for programmatic consumption, including version history, maintainers, and example manifest links.
+- [Index schema](https://profiles.openserviceprotocol.org/registry/index.schema.json): JSON Schema that validates the index.
+- [Profile specification](https://openserviceprotocol.org/spec/profiles): full spec of the profile mechanism — agent behaviour, versioning rules, stability guarantees, registry curation policy.
+- [OSP core specification](https://openserviceprotocol.org/spec): the Open Service Protocol itself.
+
+## How to Use a Profile
+
+1. In your service manifest, declare the profiles you conform to:
+   ```yaml
+   service:
+     profiles:
+       - id: osp-cold-chain-logistics
+         version: 1.0.0
+         url: https://profiles.openserviceprotocol.org/cold-chain-logistics/v1.schema.json
+   ```
+2. Populate the corresponding attributes block, namespaced by profile id:
+   ```yaml
+     evaluation:
+       attributes:
+         osp-cold-chain-logistics:
+           temperature_range_celsius: [2, 8]
+           temperature_logging: continuous
+           qualifications: [GDP]
+   ```
+3. Validate with `python tools/validate.py path/to/manifest.yaml`.
+
+A manifest may declare multiple profiles; each is validated independently under its own namespace. Unknown profiles are ignored by agents rather than causing failure, so publishing a new profile does not break existing consumers.
+
+## Writing Your Own Profile
+
+If no existing profile covers your branch, drafting a new one is lightweight:
+
+- Pick a stable id (`osp-<branch-name>`) and a canonical URL under a domain you control.
+- Use JSON Schema Draft-07. Set `additionalProperties: false` — profiles are intentionally closed.
+- Mark only fields that are truly decisive as `required`. Err toward fewer.
+- Use `enum` wherever an agent would otherwise need fuzzy matching.
+- Publish with semver. Breaking changes get a new major URL (`/v2.schema.json`); the old URL keeps serving the original schema.
+- To submit for inclusion in this registry, open a pull request against `github.com/openserviceprotocol/osp` adding your schema under `profiles/` and an entry under `profiles/registry/index.json`.
+
+Anyone may publish a profile under their own domain without being in this registry; referencing such a URL from a manifest is equally valid. The registry exists for discovery, not as a validity gate.

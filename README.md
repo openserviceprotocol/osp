@@ -80,6 +80,7 @@ Machine-readable schemas for validation:
 - **[service-manifest.schema.json](schemas/service-manifest.schema.json)** — validates service manifest YAML files
 - **[profiles/](profiles/)** — seven pilot domain profiles (logistics, cold-chain, consulting, IT managed services, legal, energy, cleaning)
 - **[profiles/registry/index.json](profiles/registry/index.json)** — machine-readable profile registry, mirrored at `profiles.openserviceprotocol.org/registry/index.json`
+- **[profiles/registry/profiles.txt](profiles/registry/profiles.txt)** — llms.txt-style Markdown summary of the registry for LLM-friendly discovery
 
 ## Examples
 
@@ -132,7 +133,8 @@ osp/
 │   ├── cleaning-services-v1.schema.json
 │   └── registry/
 │       ├── index.json                  # Machine-readable registry
-│       └── index.schema.json
+│       ├── index.schema.json
+│       └── profiles.txt                # llms.txt-style Markdown summary
 ├── examples/
 │   ├── logistics.osp.md
 │   ├── consulting.osp.md
@@ -140,8 +142,11 @@ osp/
 │   └── manifests/                      # Six full example manifests
 ├── proposals/                          # RFCs and drafts
 │   └── 001-profiles-and-attributes.md
-└── tools/
-    └── validate.py                     # Manifest + profile validator
+├── tools/
+│   └── validate.py                     # Manifest + profile + registry validator
+└── .github/
+    └── workflows/
+        └── validate.yml                # CI: runs validator on PRs and main
 ```
 
 ## Contributing

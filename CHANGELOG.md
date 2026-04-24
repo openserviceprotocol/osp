@@ -4,6 +4,18 @@ All notable changes to the OSP specification and tooling will be documented in t
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+
+- GitHub Actions workflow (`.github/workflows/validate.yml`) — runs the validator against all example manifests and the profile registry on every push and pull request to `main`.
+- `--check-registry` mode in `tools/validate.py` — validates the registry index against its schema, verifies every listed profile schema resolves and parses as valid JSON Schema, cross-checks `required_fields` hints, and flags orphan profile schemas not listed in the registry.
+- `profiles/registry/profiles.txt` — llms.txt-style Markdown summary of the profile registry for LLM-friendly discovery.
+
+### Changed
+
+- RFC-001 status updated to Accepted (implemented in OSP v0.2).
+
 ## [0.2.0] — 2026-04-24
 
 ### Added
