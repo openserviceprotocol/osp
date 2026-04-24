@@ -1,0 +1,166 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://profiles.openserviceprotocol.org/registry/index.schema.json",
+  "title": "OSP Profile Registry Index",
+  "description": "Schema for the machine-readable index of domain profiles served at profiles.openserviceprotocol.org. Third parties (e.g., distll.io) can fetch and embed this index to surface profiles to their users. Stable keys and versioning make the index usable as an API.",
+  "type": "object",
+  "required": ["registry_version", "generated_at", "website_url", "profiles"],
+  "additionalProperties": false,
+  "properties": {
+    "registry_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "description": "Version of the registry index format itself. Breaking changes bump the major."
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date when this index snapshot was generated."
+    },
+    "website_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Human-facing URL where profiles are browsable."
+    },
+    "schema_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL of this schema, for self-describing consumers."
+    },
+    "description": {
+      "type": "string"
+    },
+    "profiles": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/profile_entry" }
+    }
+  },
+  "$defs": {
+    "profile_entry": {
+      "type": "object",
+      "required": ["id", "title", "description", "domain", "status", "latest_version", "versions"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "Stable profile identifier (kebab-case). Same value referenced in service manifests under service.profiles[].id and under service.evaluation.attributes.<id>."
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 80,
+          "description": "Human-readable profile name."
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "One-paragraph summary. Surfaced on profile index pages and third-party embeds."
+        },
+        "domain": {
+          "type": "string",
+          "description": "Top-level branch classification. Example: 'logistics', 'legal', 'energy'."
+        },
+        "subdomain": {
+          "type": "string",
+          "description": "Optional narrower classification. Example: 'transport', 'retail_supply'."
+        },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Free-form keywords for search and filtering."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "active", "deprecated"],
+          "description": "Overall profile status, reflecting the latest version."
+        },
+        "latest_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Semver string of the latest version. Convenience field for consumers that only want the newest."
+        },
+        "featured": {
+          "type": "boolean",
+          "description": "Whether to highlight this profile on landing pages and integrations."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "versions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/version_entry" },
+          "description": "All published versions, newest first."
+        },
+        "maintainers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string" },
+              "url": { "type": "string", "format": "uri" }
+            }
+          }
+        },
+        "example_manifests": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" },
+          "description": "URLs to example service manifests using this profile."
+        }
+      }
+    },
+    "version_entry": {
+      "type": "object",
+      "required": ["version", "status", "released", "schema_url"],
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "active", "deprecated"]
+        },
+        "released": {
+          "type": "string",
+          "format": "date"
+        },
+        "schema_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Authoritative JSON Schema URL for this version. Stable forever."
+        },
+        "page_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Human-readable documentation page for this version."
+        },
+        "required_fields": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Fields that are required by the profile schema. Denormalised from the schema for quick filtering."
+        },
+        "field_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of fields defined in the profile schema."
+        },
+        "deprecation": {
+          "type": ["object", "null"],
+          "properties": {
+            "successor": { "type": ["string", "null"] },
+            "sunset_date": { "type": "string", "format": "date" },
+            "note": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

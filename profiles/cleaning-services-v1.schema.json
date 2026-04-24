@@ -1,0 +1,174 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://profiles.openserviceprotocol.org/cleaning-services/v1.schema.json",
+  "title": "OSP Profile: Cleaning Services v1",
+  "description": "Vocabulary for facility and specialty cleaning: the parameters that actually determine whether a provider can take on a site, as opposed to generic service attributes. Covers maintenance cleaning, deep cleaning, post-construction, specialty environments (medical, food service, cleanrooms), and access/waste constraints.",
+  "type": "object",
+  "required": ["service_types", "frequency_options"],
+  "additionalProperties": false,
+  "properties": {
+    "service_types": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "maintenance_cleaning",
+          "deep_cleaning",
+          "post_construction",
+          "move_in_out",
+          "window_and_facade",
+          "carpet_and_upholstery",
+          "hard_floor_care",
+          "disinfection",
+          "cleanroom_cleaning",
+          "kitchen_and_extraction",
+          "graffiti_removal",
+          "exterior_and_grounds"
+        ]
+      },
+      "description": "Categories of cleaning work offered. Agents should filter on this before any further comparison."
+    },
+    "frequency_options": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": ["one_off", "daily", "weekly", "bi_weekly", "monthly", "quarterly", "on_demand"]
+      },
+      "description": "Recurrence patterns the provider supports."
+    },
+    "specializations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "office",
+          "retail",
+          "hospitality",
+          "medical_outpatient",
+          "medical_inpatient",
+          "dental",
+          "laboratory",
+          "food_service",
+          "food_production",
+          "industrial",
+          "data_center",
+          "cleanroom",
+          "educational",
+          "residential"
+        ]
+      },
+      "description": "Environments the provider is trained and equipped for. Medical and cleanroom work requires specific competencies that generic providers do not have."
+    },
+    "area_range_m2": {
+      "type": "object",
+      "properties": {
+        "min": { "type": "number", "minimum": 0 },
+        "max": { "type": "number", "minimum": 0 }
+      },
+      "description": "Floor area range the provider serves per site, in square metres. A national chain and a two-person crew differ here by orders of magnitude."
+    },
+    "surface_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "carpet",
+          "hardwood",
+          "laminate",
+          "vinyl_lvt",
+          "tile_ceramic",
+          "tile_porcelain",
+          "natural_stone",
+          "concrete_sealed",
+          "concrete_polished",
+          "epoxy",
+          "rubber",
+          "glass",
+          "stainless_steel",
+          "textile_upholstery"
+        ]
+      },
+      "description": "Surfaces the provider is equipped to handle, including ones requiring specific methods (natural stone, epoxy, polished concrete)."
+    },
+    "cleanroom_iso_class": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9,
+      "description": "Highest ISO 14644-1 cleanroom class the provider can service (lower number = stricter). Omit if cleanroom work is not offered."
+    },
+    "chemical_standards": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "eu_ecolabel",
+          "nordic_swan",
+          "green_seal",
+          "cradle_to_cradle",
+          "hospital_grade_disinfectant",
+          "food_grade",
+          "biocide_registered",
+          "fragrance_free"
+        ]
+      },
+      "description": "Classification of cleaning agents used. Decisive for medical, food, and environmentally regulated sites."
+    },
+    "waste_handling": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["general", "recycling_separated", "confidential_shredding", "hazardous", "biohazard_medical", "sharps"]
+      },
+      "description": "Waste classes the provider is authorised to collect and dispose of. Most generic providers handle only 'general' and 'recycling_separated'."
+    },
+    "access_models": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["keys_held", "access_code", "smart_lock", "reception_check_in", "client_staff_accompanied", "security_cleared_only"]
+      },
+      "description": "How the provider's staff gains site access. Important for after-hours cleaning and secured facilities."
+    },
+    "time_windows": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["in_hours", "out_of_hours_evening", "overnight", "early_morning", "weekend", "twenty_four_seven"]
+      },
+      "description": "When cleaning can be performed. Many office clients require strictly out-of-hours work."
+    },
+    "staff_vetting_level": {
+      "type": "string",
+      "enum": ["standard", "background_check", "enhanced_background_check", "security_cleared"],
+      "description": "Highest vetting level applied to assigned staff. Required by regulated industries (finance, defense, medical)."
+    },
+    "languages_on_site": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "ISO 639-1 language code. Example: 'de', 'fr', 'en'."
+      },
+      "description": "Languages spoken by on-site personnel. Often omitted but important for facilities with safety instructions in specific languages."
+    },
+    "eco_certifications": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["issa_cims", "issa_cims_gb", "iso_14001", "iso_9001", "iso_45001", "b_corp"]
+      },
+      "description": "Organisational certifications held by the provider. Distinct from product-level chemical standards above."
+    },
+    "insurance_coverage_chf": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Public liability insurance coverage in CHF (or local equivalent). Sites handling valuables or sensitive assets set minimums here."
+    },
+    "minimum_engagement_value": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Smallest order the provider accepts, in the currency of their manifest. Prevents matching against jobs below economic threshold."
+    }
+  }
+}

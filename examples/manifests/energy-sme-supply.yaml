@@ -1,0 +1,151 @@
+# Example: Swiss regional utility offering green electricity supply to
+# SMEs. Demonstrates the energy-supply-v1 profile in a realistic context,
+# with a Swiss hydro-dominated mix and naturemade star certification.
+
+osp_version: "0.2"
+
+service:
+  identity:
+    id: "ewz-plus.electricity.sme-green"
+    name: "SME Green Electricity — Switzerland"
+    version: "1.3.0"
+    status: "active"
+    maturity: "autonomous"
+    summary: |
+      Certified green electricity supply for Swiss SMEs consuming
+      50,000 to 5,000,000 kWh per year. 100% Swiss hydro and solar,
+      naturemade star certified. Fixed and spot tariffs available.
+    when_to_use: |
+      SME with annual electricity consumption between 50 MWh and 5 GWh,
+      connected at low or medium voltage in Switzerland, seeking
+      transparent renewable supply with optional spot-market exposure.
+    when_not_to_use: |
+      Residential customers (consumption < 50 MWh), high-voltage
+      industrial connections, customers outside Switzerland, or
+      customers requiring gas or district heat supply.
+    tags: ["energy", "electricity", "green", "sme", "switzerland", "hydro"]
+    domain: "energy"
+    service_family: "retail_supply"
+    engagement_type: "continuous"
+
+  profiles:
+    - id: "osp-energy-supply"
+      version: "1.0.0"
+      url: "https://profiles.openserviceprotocol.org/energy-supply/v1.schema.json"
+
+  evaluation:
+    capacity:
+      min_customers_onboarding_per_month: 40
+      total_customers_served: 3200
+
+    attributes:
+      osp-energy-supply:
+        commodity: "electricity"
+        consumer_segments: ["small_commercial", "commercial", "industrial_small"]
+        supply_mix:
+          hydro: 0.82
+          solar: 0.14
+          wind: 0.02
+          biomass: 0.02
+        renewable_share: 1.0
+        carbon_intensity_gco2_per_kwh: 11
+        green_certifications:
+          - naturemade_star
+          - guarantee_of_origin_eu
+        tariff_model: "fixed"
+        annual_consumption_range_kwh:
+          min: 50000
+          max: 5000000
+        voltage_levels_served: ["low_voltage", "medium_voltage"]
+        balancing_group_managed: true
+        smart_meter_required: false
+        dynamic_pricing_supported: false
+        supply_start_leadtime: "next billing cycle (typically 30-60 days)"
+        minimum_contract_term: "12 months"
+        termination_notice: "3 months to end of contract term"
+        local_grid_operator_independent: true
+
+    geography:
+      service_regions: ["CH"]
+
+    performance:
+      standard_leadtime: "30-60 days from contract to supply start"
+      on_time_rate: 0.99
+      completion_rate: 0.998
+      sample_size: 3200
+      sample_period: "36 months"
+
+    pricing:
+      model: "per_unit"
+      currency: "CHF"
+      indicative_range:
+        min: 0.14
+        max: 0.28
+        note: |
+          Price per kWh in CHF, exclusive of grid usage fees and taxes.
+          Range reflects tariff tier by annual consumption and delivery
+          voltage. Binding quote requires latest meter readings.
+
+    certifications:
+      - "naturemade star"
+      - "ISO 14001:2015"
+      - "ISO 50001:2018"
+
+    sla:
+      response_time: "< 1 business day for quotes"
+      tracking_available: true
+      incident_notification: "< 30 minutes for supply incidents"
+      quality_guarantee: |
+        100% renewable origin guaranteed per quarter via naturemade audit.
+        Supply continuity backed by balancing group membership.
+
+    confidence_note: |
+      Supply-mix figures audited annually by naturemade.
+      Carbon intensity derived from verified supply mix using
+      KBOB factors.
+
+  contract:
+    engagement:
+      type: "continuous"
+      minimum_term: "12 months"
+      notice_period: "3 months"
+      individual_orders: false
+
+  delivery:
+    mode: "async_tracked"
+    tracking:
+      status_endpoint: true
+      webhook_support: true
+      update_frequency: "monthly consumption reports, real-time outage alerts"
+    human_involvement:
+      disclosed: true
+      typical_touchpoints: 1
+
+  governance:
+    access:
+      authentication_required: true
+      authorization_model: "oauth2"
+      agent_registration_required: true
+    data:
+      input_sensitivity: "internal"
+      output_sensitivity: "internal"
+      pii_fields: ["billing_contact", "technical_contact"]
+      retention_period: "10 years (statutory billing)"
+      deletion_on_request: false
+    compliance:
+      regulations: ["StromVG", "StromVV", "DSG", "GDPR"]
+      audit_trail: true
+
+  lifecycle:
+    created: "2024-06-01"
+    last_modified: "2026-04-24"
+    changelog:
+      - version: "1.3.0"
+        date: "2026-04-24"
+        changes: "Added OSP profile declaration and migrated mix to attributes."
+      - version: "1.2.0"
+        date: "2026-01-15"
+        changes: "Extended upper consumption limit to 5 GWh."
+    review:
+      next_review: "2026-10-01"
+      review_cycle: "semi-annually"

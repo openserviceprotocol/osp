@@ -1,0 +1,188 @@
+# Example: cleaning firm specialized in medical and laboratory
+# environments, including ISO Class 7 cleanrooms. Demonstrates how
+# the cleaning-services-v1 profile distinguishes a specialist provider
+# from a generic office-cleaning firm on decisive criteria.
+
+osp_version: "0.2"
+
+service:
+  identity:
+    id: "puroclean.cleaning.medical-specialist"
+    name: "Medical and Laboratory Cleaning — Switzerland"
+    version: "2.0.0"
+    status: "active"
+    maturity: "supervised"
+    summary: |
+      Specialist cleaning and disinfection for hospitals, outpatient
+      clinics, laboratories, and pharmaceutical cleanrooms up to
+      ISO 14644-1 Class 7. Security-cleared personnel, biohazard-capable
+      waste stream, hospital-grade disinfectants.
+    when_to_use: |
+      Healthcare or life-science facility requiring compliant cleaning
+      with documented disinfection protocols, biohazard waste handling,
+      or cleanroom-grade hygiene. Single-site or multi-site in Switzerland.
+    when_not_to_use: |
+      Standard office cleaning below 500 m² (not economical for us),
+      construction cleaning for residential projects, or cleanrooms
+      stricter than ISO Class 7 (refer to specialist pharma providers).
+    tags: ["cleaning", "medical", "laboratory", "cleanroom", "disinfection", "switzerland"]
+    domain: "facility_services"
+    service_family: "cleaning"
+    engagement_type: "continuous"
+
+  profiles:
+    - id: "osp-cleaning-services"
+      version: "1.0.0"
+      url: "https://profiles.openserviceprotocol.org/cleaning-services/v1.schema.json"
+
+  evaluation:
+    capacity:
+      staff_available: 94
+      sites_served_concurrently: 47
+
+    attributes:
+      osp-cleaning-services:
+        service_types:
+          - maintenance_cleaning
+          - deep_cleaning
+          - disinfection
+          - cleanroom_cleaning
+        frequency_options:
+          - daily
+          - weekly
+          - on_demand
+        specializations:
+          - medical_outpatient
+          - medical_inpatient
+          - dental
+          - laboratory
+          - cleanroom
+        area_range_m2:
+          min: 500
+          max: 25000
+        surface_types:
+          - vinyl_lvt
+          - tile_ceramic
+          - tile_porcelain
+          - epoxy
+          - stainless_steel
+          - glass
+          - concrete_sealed
+        cleanroom_iso_class: 7
+        chemical_standards:
+          - hospital_grade_disinfectant
+          - eu_ecolabel
+          - biocide_registered
+          - fragrance_free
+        waste_handling:
+          - general
+          - recycling_separated
+          - hazardous
+          - biohazard_medical
+          - sharps
+        access_models:
+          - keys_held
+          - smart_lock
+          - reception_check_in
+          - security_cleared_only
+        time_windows:
+          - in_hours
+          - out_of_hours_evening
+          - overnight
+          - weekend
+        staff_vetting_level: "enhanced_background_check"
+        languages_on_site: ["de", "fr", "it", "en", "pt"]
+        eco_certifications:
+          - issa_cims_gb
+          - iso_14001
+          - iso_9001
+          - iso_45001
+        insurance_coverage_chf: 10000000
+        minimum_engagement_value: 2400
+
+    geography:
+      service_regions: ["CH"]
+
+    performance:
+      standard_leadtime: "14 days from contract signature to first service"
+      on_time_rate: 0.98
+      completion_rate: 0.997
+      average_quality_score: 4.7
+      sample_size: 11400
+      sample_period: "12 months"
+
+    pricing:
+      model: "per_hour"
+      currency: "CHF"
+      indicative_range:
+        min: 48
+        max: 95
+        note: |
+          Hourly rate per cleaner. Cleanroom and biohazard work priced
+          at the upper end of the range. Monthly packages available
+          for recurring engagements; consumables and PPE billed separately.
+
+    certifications:
+      - "ISSA CIMS-GB"
+      - "ISO 14001:2015"
+      - "ISO 9001:2015"
+      - "ISO 45001:2018"
+
+    sla:
+      response_time: "< 2h for urgent requests, < 1 business day for quotes"
+      tracking_available: true
+      incident_notification: "< 30 minutes for quality incidents"
+      quality_guarantee: |
+        Weekly QA walk with site manager. Documented cleaning logs
+        per visit. Rework at no cost if audit finds deviations
+        against agreed protocol.
+
+    confidence_note: |
+      Performance metrics based on 11,400 completed service visits
+      across 47 active sites over 12 months.
+
+  contract:
+    engagement:
+      type: "continuous"
+      minimum_term: "6 months"
+      notice_period: "2 months"
+      individual_orders: true
+
+  delivery:
+    mode: "async_tracked"
+    tracking:
+      status_endpoint: true
+      webhook_support: false
+      update_frequency: "per visit"
+    human_involvement:
+      disclosed: true
+      typical_touchpoints: 4
+
+  governance:
+    access:
+      authentication_required: true
+      authorization_model: "api_key"
+      agent_registration_required: false
+    data:
+      input_sensitivity: "confidential"
+      output_sensitivity: "internal"
+      pii_fields: ["site_contact", "access_codes"]
+      retention_period: "5 years"
+      deletion_on_request: true
+    compliance:
+      regulations: ["ArG", "EKAS", "DSG", "HMG for medical waste"]
+      audit_trail: true
+
+  lifecycle:
+    created: "2024-01-20"
+    last_modified: "2026-04-24"
+    changelog:
+      - version: "2.0.0"
+        date: "2026-04-24"
+        changes: "Migrated to OSP v0.2 with cleaning-services profile."
+      - version: "1.4.0"
+        date: "2025-11-10"
+        changes: "Added cleanroom ISO Class 7 service line."
+    review:
+      next_review: "2026-10-24"
+      review_cycle: "semi-annually"

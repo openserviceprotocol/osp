@@ -1,10 +1,10 @@
-osp_version: "0.1"
+osp_version: "0.2"
 
 service:
   identity:
     id: "strategyworks.consulting.market-entry"
     name: "Market Entry Strategy"
-    version: "1.0.0"
+    version: "1.1.0"
     status: "active"
     maturity: "assisted"
     summary: |
@@ -29,6 +29,11 @@ service:
     service_family: "strategy"
     engagement_type: "consultative"
 
+  profiles:
+    - id: "osp-consulting"
+      version: "1.0.0"
+      url: "https://profiles.openserviceprotocol.org/consulting/v1.schema.json"
+
   evaluation:
     capacity:
       min_engagement_days: 10
@@ -36,10 +41,53 @@ service:
       max_parallel_engagements: 3
       team_size_range: [2, 4]
 
+    attributes:
+      osp-consulting:
+        practice_areas:
+          - market_entry
+          - growth_strategy
+          - corporate_strategy
+          - regulatory_advisory
+        engagement_models:
+          - strategy_development
+          - assessment_diagnostic
+          - advisory_only
+        industry_expertise:
+          - industrial_manufacturing
+          - technology_software
+          - medical_devices
+          - consumer_goods
+        target_market_expertise:
+          ["US", "UK", "CN", "JP", "SG", "AU", "DE", "FR", "IT", "NL", "SE", "NO"]
+        client_size_focus:
+          - sme_mid
+          - upper_mid_market
+          - large_enterprise
+        team_composition:
+          typical_lead_seniority: "partner"
+          partners_available: 6
+          consultants_available: 18
+          average_team_size: 3
+        methodology_style:
+          - hypothesis_driven
+          - data_driven_analytics
+          - scenario_planning
+          - benchmarking_heavy
+        proprietary_benchmarks_available: true
+        implementation_capability: false
+        deliverable_types:
+          - diagnostic_report
+          - strategy_document
+          - business_case
+          - financial_model
+          - roadmap
+          - workshop_output
+        languages_of_work: ["en", "de", "fr"]
+        references_sharable: true
+        conflict_of_interest_policy: "case_by_case_review"
+
     geography:
       service_regions: ["CH", "DE", "AT"]
-      target_market_expertise: ["US", "UK", "CN", "JP", "SG", "AU",
-                                "DE", "FR", "IT", "NL", "SE", "NO"]
 
     performance:
       standard_leadtime: "6-10 weeks for full engagement"
@@ -211,11 +259,16 @@ service:
 
   lifecycle:
     created: "2026-01-10"
-    last_modified: "2026-03-01"
+    last_modified: "2026-04-24"
     changelog:
+      - version: "1.1.0"
+        date: "2026-04-24"
+        changes: "Migrated to OSP v0.2. Adopted the consulting profile;
+                 moved target-market expertise and benchmark flags from
+                 ad-hoc capacity/geography fields into profile attributes."
       - version: "1.0.0"
         date: "2026-01-10"
         changes: "Initial OSP publication"
     review:
-      next_review: "2026-07-01"
+      next_review: "2026-10-24"
       review_cycle: "semi-annually"

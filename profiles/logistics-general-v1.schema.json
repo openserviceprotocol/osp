@@ -1,0 +1,130 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://profiles.openserviceprotocol.org/logistics-general/v1.schema.json",
+  "title": "OSP Profile: General Logistics v1",
+  "description": "Vocabulary for freight and shipping services that are not specialised in temperature-controlled cargo. Covers transport modes, unit types, hazardous-goods capability, equipment, customs handling, and tracking depth. Composable with 'cold-chain-logistics' for providers that offer both generic and refrigerated freight.",
+  "type": "object",
+  "required": ["transport_modes", "service_scope"],
+  "additionalProperties": false,
+  "properties": {
+    "transport_modes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": ["road_ltl", "road_ftl", "road_parcel", "rail", "air", "ocean_fcl", "ocean_lcl", "intermodal", "courier"]
+      },
+      "description": "Modes of carriage the provider operates. LTL vs FTL is the primary split for road."
+    },
+    "service_scope": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": ["domestic", "cross_border_eu", "cross_border_global", "international"]
+      },
+      "description": "Geographic scope. A provider may serve several; missing scopes are hard exclusions."
+    },
+    "unit_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "EUR1", "EUR2", "EUR3", "EUR6",
+          "CP1", "CP2", "CP3", "CP4", "CP5", "CP6", "CP7", "CP8", "CP9",
+          "industrial_1200x1000",
+          "half_pallet",
+          "quarter_pallet",
+          "carton",
+          "parcel",
+          "ibc_tote",
+          "drum",
+          "unit_load_device_uld",
+          "container_20ft",
+          "container_40ft",
+          "container_40ft_hc",
+          "container_45ft",
+          "custom"
+        ]
+      },
+      "description": "Standard load units the provider accepts and handles. EUR/CP codes follow the European EPAL / CHEP conventions."
+    },
+    "hazmat_classes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["none", "class_1", "class_2", "class_3", "class_4_1", "class_4_2", "class_4_3", "class_5_1", "class_5_2", "class_6_1", "class_6_2", "class_7", "class_8", "class_9", "lq_only"]
+      },
+      "description": "Dangerous-goods classes the provider is authorised to transport (ADR / IMDG / IATA numbering). 'none' means no hazmat; 'lq_only' means limited quantities only."
+    },
+    "equipment_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "curtainsider",
+          "box_trailer",
+          "tautliner",
+          "reefer",
+          "tanker_food",
+          "tanker_chemical",
+          "flatbed",
+          "low_loader",
+          "walking_floor",
+          "swap_body",
+          "mega_trailer",
+          "tail_lift_available",
+          "crane_equipped",
+          "adr_equipped"
+        ]
+      },
+      "description": "Vehicle and equipment types in the provider's fleet or subcontractor pool."
+    },
+    "pickup_delivery_mode": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["door_to_door", "door_to_port", "port_to_door", "port_to_port", "warehouse_to_warehouse", "terminal_pickup", "customer_collect"]
+      },
+      "description": "Pickup/delivery configurations supported. Determines what the customer must arrange on either end."
+    },
+    "customs_services": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["none", "export_clearance", "import_clearance", "transit_t1", "ata_carnet", "inward_processing", "eur1_preference", "aeo_simplified"]
+      },
+      "description": "Customs-related services the provider offers in-house (as opposed to subcontracting)."
+    },
+    "time_definite_services": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["standard", "next_day", "same_day", "timed_delivery_window", "scheduled_recurring"]
+      },
+      "description": "Time-definite service classes. 'timed_delivery_window' means guaranteed delivery within a narrow window (e.g., 09:00-11:00)."
+    },
+    "track_and_trace_depth": {
+      "type": "string",
+      "enum": ["none", "milestone_only", "realtime_gps", "realtime_with_sensors"],
+      "description": "Tracking granularity. 'realtime_with_sensors' implies temperature/humidity/shock data, though temperature specifics belong in the cold-chain profile."
+    },
+    "proof_of_delivery_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["paper_signature", "digital_signature", "photo", "geo_timestamp", "video", "customer_code"]
+      },
+      "description": "POD formats available to the customer on delivery."
+    },
+    "insurance_coverage": {
+      "type": "string",
+      "enum": ["cmr_statutory_only", "declared_value", "all_risk_cargo", "all_risk_with_delay"],
+      "description": "Default liability regime. CMR-statutory is the legal minimum for international road in most of Europe and is usually insufficient for high-value goods."
+    },
+    "customs_bonded_warehouse_available": {
+      "type": "boolean",
+      "description": "Whether the provider operates a bonded warehouse, allowing goods to be held under customs control without import duty payment."
+    }
+  }
+}

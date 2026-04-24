@@ -1,6 +1,6 @@
 # Service Manifest Reference
 
-**Status: Draft v0.1**
+**Status: Draft v0.2**
 
 ## Purpose
 
@@ -12,11 +12,12 @@ Service manifests are linked from the `osp.md` file and placed in an `/osp/servi
 
 ## Schema Overview
 
-A service manifest consists of six sections:
+A service manifest consists of the following top-level components:
 
 | Section | Purpose | Required |
 |---|---|---|
 | **identity** | Naming, classification, when to use / not use | Yes |
+| **profiles** | Domain profiles the manifest conforms to (v0.2+) | Optional |
 | **evaluation** | Parameters for agent comparison and selection | Yes |
 | **contract** | Input requirements, output guarantees, engagement model | Recommended |
 | **delivery** | Execution mode, timelines, status tracking | Recommended |
@@ -24,6 +25,12 @@ A service manifest consists of six sections:
 | **lifecycle** | Version, changelog, review cycle | Optional |
 
 Not every service needs every section at full depth. A simple lookup service can omit governance entirely. A complex consulting engagement needs all sections. The schema is a maximum format — providers fill what applies.
+
+### What changed in v0.2
+
+- **`service.profiles`** — declare which domain profiles (branch vocabularies) the manifest conforms to. See [spec/profiles.md](profiles.md).
+- **`service.evaluation.attributes`** — profile-scoped, branch-specific fields validated against the declared profile schemas.
+- **`osp_version: "0.2"`** — v0.1 manifests remain valid; upgrade is optional.
 
 ---
 
@@ -101,6 +108,26 @@ Agents may use this field to set expectations about response times or to prefer 
 
 ---
 
+## Profiles (v0.2+)
+
+Declares the domain profiles this manifest conforms to. Profiles are versioned JSON Schemas published by branch communities. They define vocabularies that let two providers in the same branch describe themselves with the same field names, so agents can compare them.
+
+```yaml
+  profiles:
+    - id: "osp-cold-chain-logistics"      # kebab-case profile id
+      version: "1.0.0"                    # semver
+      url: "https://profiles.openserviceprotocol.org/cold-chain-logistics/v1.schema.json"
+    - id: "osp-logistics-general"
+      version: "1.0.0"
+      url: "https://profiles.openserviceprotocol.org/logistics-general/v1.schema.json"
+```
+
+A manifest may declare zero, one, or many profiles. Profiles are composable: a provider of temperature-controlled LTL transport declares both `osp-logistics-general` and `osp-cold-chain-logistics`, and populates fields for each under `evaluation.attributes`.
+
+See [spec/profiles.md](profiles.md) for the full profile mechanism, agent behaviour, and the hosted registry.
+
+---
+
 ## Section 2: evaluation
 
 Contains the parameters an agent needs to compare this service against its requirements without placing an order. This is the section that enables agent-side filtering and ranking.
@@ -111,21 +138,32 @@ The evaluation section is intentionally flexible. Different service types need d
   evaluation:
 
     # --- Capacity ---
-    # What this service can handle. Structure varies by service type.
+    # Quantitative "how much can this service handle" parameters.
+    # Structure varies by service type.
     capacity:
       # Example for transport:
       min_pallets: 5                    # number, optional
       max_pallets: 15                   # number, optional
       max_weight_kg: 12000              # number, optional
-      temperature_range: [2, 25]        # [min, max], optional
-      
+
       # Example for consulting:
       min_engagement_days: 10           # number, optional
       max_parallel_engagements: 3       # number, optional
       team_size_range: [2, 6]           # [min, max], optional
-      
+
       # Providers define fields relevant to their service.
       # Agents match against fields they understand and ignore others.
+
+    # --- Attributes (v0.2+) ---
+    # Profile-scoped, branch-specific attributes. Keys are profile ids
+    # from service.profiles; values are validated against each profile's
+    # schema. Use this — not 'capacity' — for qualitative domain fields
+    # that only make sense within a branch vocabulary.
+    attributes:
+      osp-cold-chain-logistics:
+        temperature_range_celsius: [2, 8]
+        temperature_logging: "continuous"
+        qualifications: ["GDP"]
 
     # --- Geography ---
     geography:
@@ -194,7 +232,7 @@ The evaluation section is intentionally flexible. Different service types need d
 
 **The `confidence_note` matters.** It tells the agent how much to trust the numbers. Metrics based on 50 cases are less reliable than metrics based on 5,000. Making this explicit builds trust.
 
-**Domain-specific fields are fine.** A logistics provider will have fields a consulting firm doesn't, and vice versa. Agents match against fields they understand and ignore others. The common fields (geography, performance, pricing, SLA) provide a baseline for cross-service comparison.
+**Domain-specific fields are fine — but prefer `attributes` over `capacity` for them.** A logistics provider will have fields a consulting firm doesn't. `capacity` remains free-form for quantitative "how much" values, but for qualitative branch-specific vocabulary use `attributes` under a declared profile. That way two providers in the same branch describe themselves with the same field names and an agent can actually compare them. The common fields (geography, performance, pricing, SLA) provide the cross-branch baseline.
 
 ---
 

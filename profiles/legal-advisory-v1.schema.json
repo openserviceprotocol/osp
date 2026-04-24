@@ -1,0 +1,133 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://profiles.openserviceprotocol.org/legal-advisory/v1.schema.json",
+  "title": "OSP Profile: Legal Advisory v1",
+  "description": "Vocabulary for legal services: advisory, transactional, and contentious work. Captures the parameters an agent needs to decide whether a provider can actually take on a matter in a given jurisdiction and practice area, as opposed to generic professional-services criteria.",
+  "type": "object",
+  "required": ["jurisdictions", "practice_areas"],
+  "additionalProperties": false,
+  "properties": {
+    "jurisdictions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "description": "ISO 3166-1 alpha-2 country code, optionally with subdivision. Examples: 'CH', 'CH-ZH', 'US-NY', 'DE', 'EU'."
+      },
+      "description": "Jurisdictions in which the provider is qualified to advise or act. A missing jurisdiction is a hard exclusion, not a soft preference."
+    },
+    "practice_areas": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "corporate_m_and_a",
+          "commercial_contracts",
+          "employment",
+          "tax",
+          "ip_patents",
+          "ip_trademarks",
+          "ip_copyright",
+          "data_protection",
+          "competition_antitrust",
+          "regulatory_financial_services",
+          "regulatory_life_sciences",
+          "regulatory_energy",
+          "real_estate",
+          "construction",
+          "litigation_civil",
+          "litigation_commercial",
+          "arbitration_international",
+          "criminal",
+          "white_collar",
+          "immigration",
+          "family",
+          "restructuring_insolvency",
+          "public_procurement",
+          "environmental",
+          "technology_and_ai"
+        ]
+      },
+      "description": "Legal practice areas the provider covers. Agents should compare on this list before any other field."
+    },
+    "matter_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["advisory", "transactional", "contentious", "regulatory_filings", "due_diligence", "opinions"]
+      },
+      "description": "Modes of engagement the provider handles."
+    },
+    "bar_admissions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Bar associations, law societies, or equivalent registrations under which the firm or its lawyers practise. Free text to accommodate non-ISO naming. Example: 'Zürcher Anwaltsverband', 'NY State Bar'."
+    },
+    "court_representation": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["none", "administrative", "first_instance", "appellate", "supreme", "constitutional", "international_arbitration", "ecj_echr"]
+      },
+      "description": "Levels of court or tribunal at which the provider can appear. Important distinction because many advisory firms do not litigate."
+    },
+    "languages_of_work": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "ISO 639-1 language code. Example: 'de', 'en', 'fr'."
+      },
+      "description": "Languages in which the provider drafts, advises, and conducts proceedings. Not the same as general website languages."
+    },
+    "billing_models": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["hourly", "fixed_fee", "capped_fee", "retainer", "contingency", "success_fee", "subscription", "hybrid"]
+      },
+      "description": "Available billing arrangements. Some jurisdictions prohibit contingency — declaring it signals availability, not legality in every listed jurisdiction."
+    },
+    "privilege_regime": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["attorney_client_privilege", "legal_professional_privilege", "berufsgeheimnis", "in_house_counsel_privilege_recognised", "none"]
+      },
+      "description": "Privilege framework the provider operates under. Matters for cross-border and in-house contexts where privilege recognition varies."
+    },
+    "conflict_check_process": {
+      "type": "string",
+      "enum": ["automated_registry", "manual_partner_review", "combined", "none_disclosed"],
+      "description": "How conflicts of interest are screened before engagement. Agents acting for corporate clients should require this."
+    },
+    "ethical_walls_supported": {
+      "type": "boolean",
+      "description": "Whether the provider operates information barriers to allow simultaneous engagements that would otherwise conflict."
+    },
+    "regulated_industry_experience": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["financial_services", "insurance", "pharma", "medical_devices", "energy", "telecoms", "aviation", "defense", "gambling", "crypto_digital_assets"]
+      },
+      "description": "Regulated sectors in which the provider has declared meaningful experience. Not a certification; a self-declaration used for matching."
+    },
+    "team_composition": {
+      "type": "object",
+      "properties": {
+        "partners_available": { "type": "integer", "minimum": 0 },
+        "associates_available": { "type": "integer", "minimum": 0 },
+        "typical_lead_seniority": {
+          "type": "string",
+          "enum": ["partner", "counsel", "senior_associate", "associate"]
+        }
+      },
+      "description": "Indicative staffing capacity. Lets an agent distinguish a solo practitioner from a full-service firm."
+    },
+    "cross_border_capability": {
+      "type": "boolean",
+      "description": "Whether the provider routinely handles matters spanning multiple jurisdictions in-house, as opposed to referring abroad."
+    }
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://profiles.openserviceprotocol.org/consulting/v1.schema.json",
+  "title": "OSP Profile: Consulting v1",
+  "description": "Vocabulary for professional advisory and consulting services: strategy, operations, transformation, technology. Captures the dimensions on which buyers actually differentiate firms — practice area, industry depth, methodology, implementation capability — rather than generic service attributes.",
+  "type": "object",
+  "required": ["practice_areas", "engagement_models"],
+  "additionalProperties": false,
+  "properties": {
+    "practice_areas": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "corporate_strategy",
+          "growth_strategy",
+          "market_entry",
+          "m_and_a_advisory",
+          "post_merger_integration",
+          "operations_excellence",
+          "supply_chain",
+          "procurement",
+          "digital_transformation",
+          "technology_strategy",
+          "data_and_analytics",
+          "ai_and_automation",
+          "cybersecurity_advisory",
+          "organisation_design",
+          "people_and_change",
+          "sustainability_esg",
+          "regulatory_advisory",
+          "pricing_and_commercial",
+          "customer_experience",
+          "innovation_and_ventures",
+          "public_sector",
+          "restructuring_and_turnaround"
+        ]
+      },
+      "description": "Practice areas the firm actively serves. Agents should match on this list before ranking on any other criterion."
+    },
+    "engagement_models": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": ["advisory_only", "assessment_diagnostic", "strategy_development", "implementation_support", "implementation_lead", "interim_leadership", "staff_augmentation", "training_and_enablement"]
+      },
+      "description": "How the firm engages. Pure advisory differs fundamentally from implementation-led work."
+    },
+    "industry_expertise": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "industrial_manufacturing",
+          "automotive",
+          "aerospace_defense",
+          "chemicals",
+          "construction",
+          "financial_services_banking",
+          "financial_services_insurance",
+          "asset_management",
+          "healthcare_providers",
+          "pharma_biotech",
+          "medical_devices",
+          "consumer_retail",
+          "consumer_goods",
+          "hospitality_travel",
+          "telecoms",
+          "media_entertainment",
+          "technology_software",
+          "logistics_transportation",
+          "energy_utilities",
+          "oil_and_gas",
+          "public_sector",
+          "education",
+          "non_profit"
+        ]
+      },
+      "description": "Industries where the firm has demonstrable depth. Self-declared; consumers weigh against references."
+    },
+    "target_market_expertise": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "ISO 3166-1 alpha-2 country code, or region group. Example: 'DE', 'US', 'SG', 'APAC', 'LATAM'."
+      },
+      "description": "Geographic markets the firm knows first-hand (as opposed to merely serving from HQ)."
+    },
+    "client_size_focus": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["startup_pre_revenue", "startup_growth", "sme_small", "sme_mid", "upper_mid_market", "large_enterprise", "global_multinational", "public_sector", "private_equity_portfolio"]
+      },
+      "description": "Client segments the firm is structured to serve. Revenue bands vary by geography; this enum captures the structural fit rather than a currency amount."
+    },
+    "team_composition": {
+      "type": "object",
+      "properties": {
+        "typical_lead_seniority": {
+          "type": "string",
+          "enum": ["partner", "principal", "senior_manager", "manager", "senior_consultant"]
+        },
+        "partners_available": { "type": "integer", "minimum": 0 },
+        "consultants_available": { "type": "integer", "minimum": 0 },
+        "average_team_size": { "type": "integer", "minimum": 1 }
+      },
+      "description": "Indicative staffing. Distinguishes boutique partner-led shops from pyramid firms."
+    },
+    "methodology_style": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["hypothesis_driven", "data_driven_analytics", "design_thinking", "scenario_planning", "lean_sixsigma", "agile_transformation", "systems_thinking", "benchmarking_heavy"]
+      },
+      "description": "Analytical approaches the firm employs. Clients with data-heavy problems filter out design-thinking-only shops and vice versa."
+    },
+    "proprietary_benchmarks_available": {
+      "type": "boolean",
+      "description": "Whether the firm maintains proprietary benchmark datasets that inform its work. Significant differentiator for strategy and operations work."
+    },
+    "implementation_capability": {
+      "type": "boolean",
+      "description": "Whether the firm can execute the strategies it recommends, beyond advisory handover. Often the decisive question for transformation programmes."
+    },
+    "deliverable_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["diagnostic_report", "strategy_document", "business_case", "financial_model", "roadmap", "operating_model_blueprint", "implementation_plan", "workshop_output", "training_curriculum", "interim_leadership_handover"]
+      },
+      "description": "Typical outputs produced. Grounds expectations on artefacts."
+    },
+    "languages_of_work": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "ISO 639-1 code. Example: 'en', 'de', 'fr'."
+      },
+      "description": "Working languages (writing, workshops, interviews). Not marketing languages."
+    },
+    "references_sharable": {
+      "type": "boolean",
+      "description": "Whether anonymised or named client references can be provided during evaluation. Many mandates are confidential; declaring this honestly saves time."
+    },
+    "conflict_of_interest_policy": {
+      "type": "string",
+      "enum": ["case_by_case_review", "formal_walls", "never_serve_competitors_simultaneously", "declare_and_proceed"],
+      "description": "How concurrent engagements with competitors are managed."
+    }
+  }
+}

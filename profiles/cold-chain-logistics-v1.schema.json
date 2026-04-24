@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://profiles.openserviceprotocol.org/cold-chain-logistics/v1.schema.json",
+  "title": "OSP Profile: Cold Chain Logistics v1",
+  "description": "Vocabulary for temperature-controlled transport and storage services. Intended for pharmaceutical, food, and chemical logistics where temperature integrity during transit is decisive for service selection.",
+  "type": "object",
+  "required": ["temperature_range_celsius", "temperature_logging"],
+  "additionalProperties": false,
+  "properties": {
+    "temperature_range_celsius": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "Supported temperature range as [min, max] in degrees Celsius. Example: [2, 8] for standard pharma cold chain."
+    },
+    "temperature_precision_celsius": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Monitoring resolution in degrees Celsius. Example: 0.5 means sensors record in 0.5°C steps."
+    },
+    "temperature_logging": {
+      "type": "string",
+      "enum": ["continuous", "interval_1m", "interval_15m", "interval_hourly", "on_demand"],
+      "description": "Frequency and model of temperature recording during transport."
+    },
+    "excursion_policy": {
+      "type": "string",
+      "enum": ["auto-quarantine", "notify-customer", "continue-log-only", "provider-decision"],
+      "description": "Provider's defined behaviour when the temperature leaves the declared range."
+    },
+    "excursion_notification_time": {
+      "type": "string",
+      "description": "Maximum time from excursion detection to customer notification. Example: '< 15 minutes'."
+    },
+    "qualifications": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["GDP", "GxP", "USP_1079", "WHO_TRS961", "EU_GMP_Annex_15", "IATA_CEIV_Pharma"]
+      },
+      "description": "Applicable cold chain qualification standards the provider operates under."
+    },
+    "qualified_packaging_available": {
+      "type": "boolean",
+      "description": "Whether the provider offers qualified / validated passive packaging (e.g., PCM, VIP)."
+    },
+    "packaging_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["active_reefer", "passive_PCM", "passive_VIP", "dry_ice", "liquid_nitrogen", "gel_pack"]
+      },
+      "description": "Supported thermal packaging or conditioning methods."
+    },
+    "mean_kinetic_temperature_reported": {
+      "type": "boolean",
+      "description": "Whether the provider calculates and reports MKT per shipment, as expected under USP <1079>."
+    },
+    "temperature_log_format": {
+      "type": "string",
+      "enum": ["pdf", "csv", "json", "pdf_and_csv"],
+      "description": "Format in which the temperature record is delivered to the customer."
+    },
+    "qualified_drivers": {
+      "type": "boolean",
+      "description": "Whether drivers receive formal cold-chain handling training and this is documented."
+    }
+  }
+}

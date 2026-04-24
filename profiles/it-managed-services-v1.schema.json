@@ -1,0 +1,157 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://profiles.openserviceprotocol.org/it-managed-services/v1.schema.json",
+  "title": "OSP Profile: IT Managed Services v1",
+  "description": "Vocabulary for managed IT services: hosting, databases, Kubernetes, security, backup, monitoring, and SRE-on-demand. Captures the operational parameters — SLA tiers, support coverage, recovery objectives, compliance frameworks — that drive provider selection beyond generic cloud features.",
+  "type": "object",
+  "required": ["service_categories", "cloud_providers"],
+  "additionalProperties": false,
+  "properties": {
+    "service_categories": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "managed_hosting",
+          "managed_kubernetes",
+          "managed_databases",
+          "managed_networking",
+          "managed_security",
+          "managed_backup",
+          "managed_monitoring",
+          "managed_identity",
+          "managed_cicd",
+          "sre_on_demand",
+          "disaster_recovery",
+          "cloud_migration",
+          "finops_cost_management"
+        ]
+      },
+      "description": "Service lines the provider actively operates. Distinct from cloud services resold without operational responsibility."
+    },
+    "cloud_providers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": ["aws", "azure", "gcp", "oracle_cloud", "ibm_cloud", "digitalocean", "hetzner", "ovh", "exoscale", "swiss_sovereign", "on_premise", "hybrid", "multi_cloud"]
+      },
+      "description": "Hyperscaler and platform targets supported. 'swiss_sovereign' covers CH-located sovereign clouds, relevant where data residency is regulated."
+    },
+    "os_support": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["ubuntu", "debian", "rhel", "rocky_linux", "alma_linux", "sles", "windows_server", "alpine", "amazon_linux", "custom"]
+      },
+      "description": "Operating systems the provider manages (monitoring, patching, support)."
+    },
+    "orchestration_platforms": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["kubernetes_self_managed", "eks", "aks", "gke", "openshift", "rancher", "nomad", "ecs", "docker_swarm", "none"]
+      },
+      "description": "Container orchestration platforms supported end-to-end."
+    },
+    "managed_databases": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["postgresql", "mysql", "mariadb", "mongodb", "redis", "elasticsearch", "opensearch", "cassandra", "clickhouse", "oracle", "mssql", "dynamodb", "cosmosdb", "spanner"]
+      },
+      "description": "Database engines the provider operates. Managing a database is materially different from running a VM that hosts one."
+    },
+    "iac_tools_supported": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["terraform", "opentofu", "pulumi", "cloudformation", "arm_templates", "bicep", "ansible", "chef", "puppet", "salt", "crossplane"]
+      },
+      "description": "Infrastructure-as-code tools the provider uses and can maintain alongside customer IaC."
+    },
+    "uptime_sla_tiers": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "minimum": 0.9,
+        "maximum": 1
+      },
+      "description": "Available uptime SLA tiers, expressed as fractions (0.99 = 99%, 0.9995 = 99.95%). Providers typically offer multiple."
+    },
+    "support_coverage": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["business_hours_local", "extended_hours", "24x7", "follow_the_sun"]
+      },
+      "description": "Support-desk coverage models available."
+    },
+    "incident_response_times": {
+      "type": "object",
+      "properties": {
+        "severity_1_minutes": { "type": "integer", "minimum": 0 },
+        "severity_2_minutes": { "type": "integer", "minimum": 0 },
+        "severity_3_minutes": { "type": "integer", "minimum": 0 },
+        "severity_4_minutes": { "type": "integer", "minimum": 0 }
+      },
+      "description": "Time-to-acknowledge by incident severity, in minutes. Severity 1 is customer-down / data-loss."
+    },
+    "backup_retention_max_days": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Maximum retention horizon for managed backups, in days. Regulated industries often require ≥ 2555 (7 years)."
+    },
+    "dr_rto_minutes": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Best available Recovery Time Objective (RTO), in minutes. Time from incident declaration to service restoration."
+    },
+    "dr_rpo_minutes": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Best available Recovery Point Objective (RPO), in minutes. Maximum acceptable data loss window."
+    },
+    "security_certifications": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["iso_27001", "iso_27017", "iso_27018", "iso_22301", "soc_2_type_i", "soc_2_type_ii", "pci_dss", "hipaa", "hitrust", "fedramp_moderate", "fedramp_high", "nis2_ready", "tisax"]
+      },
+      "description": "Third-party attestations held by the provider organisation (not merely customer-inherited from the hyperscaler)."
+    },
+    "compliance_frameworks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["cis_benchmarks", "nist_csf", "nist_800_53", "bsi_c5", "finma_rs_2018_3", "dsg_ch", "gdpr_eu", "hipaa_us", "ccpa_us"]
+      },
+      "description": "Regulatory and best-practice frameworks the managed environments are engineered against."
+    },
+    "patch_management": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string",
+          "enum": ["automated", "semi_automated", "manual_scheduled", "customer_controlled"]
+        },
+        "critical_patch_sla_hours": { "type": "integer", "minimum": 0 },
+        "standard_patch_cycle_days": { "type": "integer", "minimum": 0 }
+      },
+      "description": "How patches are applied and on what cadence."
+    },
+    "data_residency_guaranteed": {
+      "type": "boolean",
+      "description": "Whether the provider contractually guarantees that customer data does not leave declared jurisdictions, including backups and operational access."
+    },
+    "single_tenant_available": {
+      "type": "boolean",
+      "description": "Whether single-tenant deployment is available. Relevant for regulated and high-security workloads."
+    },
+    "agent_ops_enabled": {
+      "type": "boolean",
+      "description": "Whether the provider exposes an agent-operable control plane (MCP, API, structured events) for autonomous management by external AI agents."
+    }
+  }
+}

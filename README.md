@@ -67,16 +67,19 @@ Start with Layer 1 (a single file). Add layers as you need them.
 
 - **[Layer 1: Discovery](spec/discovery.md)** — the `osp.md` file format and how agents find your services
 - **[Service Manifest Reference](spec/service-manifest-reference.md)** — complete YAML schema for describing a service
+- **[Profiles (v0.2+)](spec/profiles.md)** — branch-specific vocabularies for attributes that matter within an industry but not across
 - Layer 2: Contracting (planned)
 - Layer 3: Delivery (planned)
 - Layer 4: Settlement (planned)
 
-## Schemas
+## Schemas and Profiles
 
-Machine-readable JSON Schemas for validation:
+Machine-readable schemas for validation:
 
 - **[osp-md.schema.json](schemas/osp-md.schema.json)** — validates the structure of `osp.md` files
 - **[service-manifest.schema.json](schemas/service-manifest.schema.json)** — validates service manifest YAML files
+- **[profiles/](profiles/)** — seven pilot domain profiles (logistics, cold-chain, consulting, IT managed services, legal, energy, cleaning)
+- **[profiles/registry/index.json](profiles/registry/index.json)** — machine-readable profile registry, mirrored at `profiles.openserviceprotocol.org/registry/index.json`
 
 ## Examples
 
@@ -90,13 +93,16 @@ Discovery files for different industries:
 
 ### Service manifests
 
-Complete YAML manifests showing all schema sections:
+Complete YAML manifests showing all schema sections, each declaring the relevant domain profiles:
 
-- **[LTL Transport](examples/manifests/ltl-transport.yaml)** — transactional service, supervised maturity, async delivery
-- **[Market Entry Strategy](examples/manifests/market-entry.yaml)** — consultative service, assisted maturity, interactive delivery
-- **[Managed Cloud Hosting](examples/manifests/managed-hosting.yaml)** — continuous service, autonomous maturity, tracked delivery
+- **[LTL Transport](examples/manifests/ltl-transport.yaml)** — logistics-general + cold-chain-logistics; transactional, async delivery
+- **[Market Entry Strategy](examples/manifests/market-entry.yaml)** — consulting; consultative, interactive delivery
+- **[Managed Cloud Hosting](examples/manifests/managed-hosting.yaml)** — IT managed services; continuous, tracked delivery
+- **[Swiss Market Entry Legal Package](examples/manifests/legal-market-entry.yaml)** — legal advisory
+- **[SME Green Electricity](examples/manifests/energy-sme-supply.yaml)** — energy supply
+- **[Medical Cleaning Specialist](examples/manifests/cleaning-medical.yaml)** — cleaning services
 
-These three examples deliberately cover different engagement types, maturity levels, and delivery modes to show the full range of the format.
+These examples deliberately cover different engagement types, maturity levels, delivery modes, and branches to show the full range of the format.
 
 ## Design Principles
 
@@ -111,19 +117,31 @@ These three examples deliberately cover different engagement types, maturity lev
 osp/
 ├── spec/
 │   ├── discovery.md                    # Layer 1 specification
-│   └── service-manifest-reference.md   # Complete manifest schema docs
+│   ├── service-manifest-reference.md   # Complete manifest schema docs
+│   └── profiles.md                     # Domain profile mechanism (v0.2)
 ├── schemas/
-│   ├── osp-md.schema.json             # JSON Schema for osp.md
+│   ├── osp-md.schema.json              # JSON Schema for osp.md
 │   └── service-manifest.schema.json    # JSON Schema for manifests
+├── profiles/                           # Branch-specific vocabularies (v0.2)
+│   ├── logistics-general-v1.schema.json
+│   ├── cold-chain-logistics-v1.schema.json
+│   ├── consulting-v1.schema.json
+│   ├── it-managed-services-v1.schema.json
+│   ├── legal-advisory-v1.schema.json
+│   ├── energy-supply-v1.schema.json
+│   ├── cleaning-services-v1.schema.json
+│   └── registry/
+│       ├── index.json                  # Machine-readable registry
+│       └── index.schema.json
 ├── examples/
-│   ├── logistics.osp.md               # Example: transport company
-│   ├── consulting.osp.md              # Example: strategy consultancy
-│   ├── it-services.osp.md             # Example: managed cloud provider
-│   └── manifests/
-│       ├── ltl-transport.yaml          # Full manifest: transport
-│       ├── market-entry.yaml           # Full manifest: consulting
-│       └── managed-hosting.yaml        # Full manifest: IT services
-└── tools/                              # Validator and utilities (planned)
+│   ├── logistics.osp.md
+│   ├── consulting.osp.md
+│   ├── it-services.osp.md
+│   └── manifests/                      # Six full example manifests
+├── proposals/                          # RFCs and drafts
+│   └── 001-profiles-and-attributes.md
+└── tools/
+    └── validate.py                     # Manifest + profile validator
 ```
 
 ## Contributing

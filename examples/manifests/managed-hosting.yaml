@@ -1,10 +1,10 @@
-osp_version: "0.1"
+osp_version: "0.2"
 
 service:
   identity:
     id: "cloudops.infrastructure.managed-hosting"
     name: "Managed Cloud Hosting"
-    version: "3.0.0"
+    version: "3.1.0"
     status: "active"
     maturity: "autonomous"
     summary: |
@@ -28,14 +28,57 @@ service:
     service_family: "infrastructure"
     engagement_type: "continuous"
 
+  profiles:
+    - id: "osp-it-managed-services"
+      version: "1.0.0"
+      url: "https://profiles.openserviceprotocol.org/it-managed-services/v1.schema.json"
+
   evaluation:
     capacity:
-      vm_types: ["general-purpose", "compute-optimized", "memory-optimized"]
-      container_orchestration: ["kubernetes", "ecs"]
-      cloud_providers: ["aws", "azure"]
-      os_support: ["ubuntu", "debian", "rhel", "windows-server"]
       max_managed_instances: 500
-      managed_databases: ["postgresql", "mysql", "redis", "mongodb"]
+      vm_types: ["general-purpose", "compute-optimized", "memory-optimized"]
+
+    attributes:
+      osp-it-managed-services:
+        service_categories:
+          - managed_hosting
+          - managed_kubernetes
+          - managed_databases
+          - managed_monitoring
+          - managed_backup
+          - disaster_recovery
+          - cloud_migration
+        cloud_providers: ["aws", "azure"]
+        os_support: ["ubuntu", "debian", "rhel", "windows_server"]
+        orchestration_platforms: ["eks", "aks", "kubernetes_self_managed", "ecs"]
+        managed_databases: ["postgresql", "mysql", "redis", "mongodb"]
+        iac_tools_supported: ["terraform", "pulumi", "cloudformation", "ansible"]
+        uptime_sla_tiers: [0.99, 0.995, 0.999]
+        support_coverage: ["business_hours_local", "24x7"]
+        incident_response_times:
+          severity_1_minutes: 15
+          severity_2_minutes: 60
+          severity_3_minutes: 240
+          severity_4_minutes: 1440
+        backup_retention_max_days: 365
+        dr_rto_minutes: 60
+        dr_rpo_minutes: 15
+        security_certifications:
+          - iso_27001
+          - soc_2_type_ii
+          - nis2_ready
+        compliance_frameworks:
+          - cis_benchmarks
+          - nist_csf
+          - dsg_ch
+          - gdpr_eu
+        patch_management:
+          model: "semi_automated"
+          critical_patch_sla_hours: 24
+          standard_patch_cycle_days: 30
+        data_residency_guaranteed: true
+        single_tenant_available: true
+        agent_ops_enabled: true
 
     geography:
       service_regions: ["CH", "DE", "AT"]
@@ -44,9 +87,6 @@ service:
 
     performance:
       standard_leadtime: "24-48h for initial setup"
-      uptime_sla: 0.999
-      patch_cycle: "monthly, critical patches within 24h"
-      backup_frequency: "daily, 30-day retention"
       completion_rate: 0.99
       sample_size: 340
       sample_period: "12 months"
@@ -208,8 +248,13 @@ service:
 
   lifecycle:
     created: "2024-06-01"
-    last_modified: "2026-03-10"
+    last_modified: "2026-04-24"
     changelog:
+      - version: "3.1.0"
+        date: "2026-04-24"
+        changes: "Migrated to OSP v0.2. Adopted the it-managed-services
+                 profile; moved DR, SLA tier, certification, and patch
+                 management details into profile attributes."
       - version: "3.0.0"
         date: "2026-03-10"
         changes: "Migrated to OSP format. Added token pricing.

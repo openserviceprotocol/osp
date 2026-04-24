@@ -1,0 +1,123 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://profiles.openserviceprotocol.org/energy-supply/v1.schema.json",
+  "title": "OSP Profile: Energy Supply v1",
+  "description": "Vocabulary for retail and wholesale energy supply offers: electricity, gas, heat, cooling, and hydrogen. Designed so an agent can compare providers on the parameters that actually drive procurement decisions — supply mix, carbon intensity, tariff model, and consumption fit — not only on headline price.",
+  "type": "object",
+  "required": ["commodity", "consumer_segments"],
+  "additionalProperties": false,
+  "properties": {
+    "commodity": {
+      "type": "string",
+      "enum": ["electricity", "natural_gas", "biogas", "district_heat", "district_cooling", "hydrogen"],
+      "description": "The energy commodity being supplied. One commodity per manifest — multi-commodity providers use multiple manifests."
+    },
+    "consumer_segments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": ["residential", "small_commercial", "commercial", "industrial_small", "industrial_large", "public_sector", "ev_charging"]
+      },
+      "description": "Customer classes the provider serves. Agents should match this against the requester's own classification before any price comparison."
+    },
+    "supply_mix": {
+      "type": "object",
+      "description": "Declared breakdown of generation or procurement sources. Shares are expressed as fractions of 1 and should sum to ~1.0.",
+      "properties": {
+        "solar": { "type": "number", "minimum": 0, "maximum": 1 },
+        "wind": { "type": "number", "minimum": 0, "maximum": 1 },
+        "hydro": { "type": "number", "minimum": 0, "maximum": 1 },
+        "biomass": { "type": "number", "minimum": 0, "maximum": 1 },
+        "geothermal": { "type": "number", "minimum": 0, "maximum": 1 },
+        "nuclear": { "type": "number", "minimum": 0, "maximum": 1 },
+        "natural_gas": { "type": "number", "minimum": 0, "maximum": 1 },
+        "coal": { "type": "number", "minimum": 0, "maximum": 1 },
+        "waste": { "type": "number", "minimum": 0, "maximum": 1 },
+        "unknown_or_mixed": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "renewable_share": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Fraction of the supply that is renewable. Convenience aggregate of supply_mix; providers should publish both."
+    },
+    "carbon_intensity_gco2_per_kwh": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Grams of CO2-equivalent per delivered kWh, computed over the declared supply mix."
+    },
+    "green_certifications": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "naturemade_star",
+          "naturemade_basic",
+          "tuev_sued_ee01",
+          "ok_power",
+          "green_e",
+          "i_rec",
+          "go_rego",
+          "guarantee_of_origin_eu"
+        ]
+      },
+      "description": "Third-party verified green-energy labels. Required for credible renewable claims in most jurisdictions."
+    },
+    "tariff_model": {
+      "type": "string",
+      "enum": ["fixed", "indexed", "spot", "time_of_use", "dynamic", "two_part_tariff"],
+      "description": "Pricing structure. Spot and dynamic pass market volatility to the customer; fixed shifts it to the supplier."
+    },
+    "price_index": {
+      "type": "string",
+      "description": "Reference index for indexed or spot tariffs. Example: 'EEX Day-Ahead DE-LU', 'TTF month-ahead'."
+    },
+    "annual_consumption_range_kwh": {
+      "type": "object",
+      "properties": {
+        "min": { "type": "number", "minimum": 0 },
+        "max": { "type": "number", "minimum": 0 }
+      },
+      "description": "Accepted annual volume in kWh. Hard filter for whether the offer applies."
+    },
+    "voltage_levels_served": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["low_voltage", "medium_voltage", "high_voltage", "extra_high_voltage"]
+      },
+      "description": "Electrical supply only. Determines whether the provider can serve the grid connection in question."
+    },
+    "balancing_group_managed": {
+      "type": "boolean",
+      "description": "Whether the provider manages the customer's balancing group responsibility. Relevant for mid-to-large industrial supply."
+    },
+    "smart_meter_required": {
+      "type": "boolean",
+      "description": "Whether the offer requires a smart meter to be installed at the consumption site."
+    },
+    "dynamic_pricing_supported": {
+      "type": "boolean",
+      "description": "Whether hourly (or finer) dynamic pricing is supported end-to-end, including metering and billing."
+    },
+    "supply_start_leadtime": {
+      "type": "string",
+      "description": "Typical time between contract signature and supply start. Example: '30 days', 'next billing cycle'."
+    },
+    "minimum_contract_term": {
+      "type": "string",
+      "description": "Shortest commitment period. Example: '12 months', 'none'."
+    },
+    "termination_notice": {
+      "type": "string",
+      "description": "Required notice period to terminate an active contract. Example: '3 months'."
+    },
+    "local_grid_operator_independent": {
+      "type": "boolean",
+      "description": "Whether the supply offer is decoupled from the local DSO (i.e., customer can switch without grid changes)."
+    }
+  }
+}

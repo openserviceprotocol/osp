@@ -4,6 +4,31 @@ All notable changes to the OSP specification and tooling will be documented in t
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.0] — 2026-04-24
+
+### Added
+
+- **Domain profiles** — a mechanism for branch-specific vocabularies validated against community-maintained JSON Schemas. See `spec/profiles.md`.
+- `service.profiles` field in manifests — declares conformance to one or more profiles.
+- `service.evaluation.attributes` field — profile-scoped attributes namespaced by profile id.
+- Seven pilot profiles in `profiles/`: logistics-general, cold-chain-logistics, consulting, it-managed-services, legal-advisory, energy-supply, cleaning-services.
+- Profile registry under `profiles/registry/` with `index.json` and its schema. Hosted at `profiles.openserviceprotocol.org`.
+- `spec/profiles.md` — full specification of the profile mechanism, agent behaviour, registry structure.
+- Three additional example manifests (legal, energy, cleaning) demonstrating the new profiles.
+- `tools/validate.py` — manifest validator that also fetches and validates against declared profile schemas.
+- RFC document `proposals/001-profiles-and-attributes.md`.
+
+### Changed
+
+- `schemas/service-manifest.schema.json` accepts `osp_version: "0.1"` and `"0.2"`.
+- Canonical example manifests (`ltl-transport`, `market-entry`, `managed-hosting`) migrated to v0.2 with profile declarations; previously ad-hoc domain fields moved into profile attributes.
+- `spec/service-manifest-reference.md` status bumped to Draft v0.2, with sections added for profiles and attributes.
+- Relaxed `service.identity.id` pattern to allow hyphens in the first two segments (e.g., `ewz-plus.electricity.sme-green`). Backwards-compatible: all v0.1 IDs continue to match.
+
+### Backwards compatibility
+
+- v0.1 manifests remain valid under v0.2 — all additions are optional.
+
 ## [0.1.0] — 2026-03-19
 
 ### Added

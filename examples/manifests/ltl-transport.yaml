@@ -1,10 +1,10 @@
-osp_version: "0.1"
+osp_version: "0.2"
 
 service:
   identity:
     id: "translog.transport.ltl"
     name: "LTL Transport Europe"
-    version: "2.1.0"
+    version: "2.2.0"
     status: "active"
     maturity: "supervised"
     summary: |
@@ -26,14 +26,47 @@ service:
     service_family: "transport"
     engagement_type: "transactional"
 
+  profiles:
+    - id: "osp-logistics-general"
+      version: "1.0.0"
+      url: "https://profiles.openserviceprotocol.org/logistics-general/v1.schema.json"
+    - id: "osp-cold-chain-logistics"
+      version: "1.0.0"
+      url: "https://profiles.openserviceprotocol.org/cold-chain-logistics/v1.schema.json"
+
   evaluation:
     capacity:
       min_pallets: 5
       max_pallets: 15
-      pallet_types: ["EUR1", "EUR2", "industrial"]
       max_weight_kg: 12000
-      temperature_range: [2, 25]
-      temperature_precision_celsius: 1
+
+    attributes:
+      osp-logistics-general:
+        transport_modes: ["road_ltl"]
+        service_scope: ["domestic", "cross_border_eu"]
+        unit_types: ["EUR1", "EUR2", "industrial_1200x1000"]
+        hazmat_classes: ["none", "class_2", "class_3", "class_8", "class_9", "lq_only"]
+        equipment_types: ["curtainsider", "box_trailer", "reefer", "tail_lift_available", "adr_equipped"]
+        pickup_delivery_mode: ["door_to_door", "warehouse_to_warehouse"]
+        customs_services: ["export_clearance", "import_clearance", "transit_t1", "aeo_simplified"]
+        time_definite_services: ["standard", "next_day", "timed_delivery_window"]
+        track_and_trace_depth: "realtime_with_sensors"
+        proof_of_delivery_types: ["digital_signature", "photo", "geo_timestamp"]
+        insurance_coverage: "declared_value"
+        customs_bonded_warehouse_available: false
+
+      osp-cold-chain-logistics:
+        temperature_range_celsius: [2, 25]
+        temperature_precision_celsius: 1.0
+        temperature_logging: "continuous"
+        excursion_policy: "notify-customer"
+        excursion_notification_time: "< 15 minutes"
+        qualifications: ["GDP"]
+        qualified_packaging_available: true
+        packaging_types: ["active_reefer", "passive_PCM", "gel_pack"]
+        mean_kinetic_temperature_reported: true
+        temperature_log_format: "pdf_and_csv"
+        qualified_drivers: true
 
     geography:
       service_regions: ["CH", "DE", "AT", "FR", "IT", "NL", "BE", "LU",
@@ -221,8 +254,13 @@ service:
 
   lifecycle:
     created: "2025-01-15"
-    last_modified: "2026-02-01"
+    last_modified: "2026-04-24"
     changelog:
+      - version: "2.2.0"
+        date: "2026-04-24"
+        changes: "Migrated to OSP v0.2. Declared logistics-general and
+                 cold-chain-logistics profiles; moved domain-specific
+                 fields into evaluation.attributes."
       - version: "2.1.0"
         date: "2026-02-01"
         changes: "Added express delivery option and insurance field"

@@ -1,0 +1,226 @@
+{
+  "registry_version": "1.0",
+  "generated_at": "2026-04-24",
+  "website_url": "https://profiles.openserviceprotocol.org",
+  "schema_url": "https://profiles.openserviceprotocol.org/registry/index.schema.json",
+  "description": "Machine-readable index of OSP domain profiles. Consumed by the OSP website, validators, and third-party integrations (e.g., distll.io). Each entry points to the authoritative JSON Schema for a branch-specific vocabulary.",
+  "profiles": [
+    {
+      "id": "osp-logistics-general",
+      "title": "General Logistics",
+      "description": "Vocabulary for freight and shipping: transport modes, unit types, hazmat capability, equipment, customs handling, tracking depth.",
+      "domain": "logistics",
+      "subdomain": "transport",
+      "tags": ["freight", "shipping", "road", "ocean", "air", "rail", "hazmat", "customs"],
+      "status": "draft",
+      "latest_version": "1.0.0",
+      "featured": true,
+      "created_at": "2026-04-24",
+      "updated_at": "2026-04-24",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "status": "draft",
+          "released": "2026-04-24",
+          "schema_url": "https://profiles.openserviceprotocol.org/logistics-general/v1.schema.json",
+          "page_url": "https://openserviceprotocol.org/profiles/logistics-general/v1",
+          "required_fields": ["transport_modes", "service_scope"],
+          "field_count": 12,
+          "deprecation": null
+        }
+      ],
+      "maintainers": [
+        { "name": "OSP Core", "url": "https://openserviceprotocol.org" }
+      ],
+      "example_manifests": [
+        "https://openserviceprotocol.org/examples/ltl-transport.yaml"
+      ]
+    },
+    {
+      "id": "osp-cold-chain-logistics",
+      "title": "Cold Chain Logistics",
+      "description": "Vocabulary for temperature-controlled transport and storage: range, logging, excursion policy, qualifications, packaging. Composable with osp-logistics-general.",
+      "domain": "logistics",
+      "subdomain": "temperature-controlled",
+      "tags": ["pharma", "food", "chemicals", "temperature-controlled", "gdp", "composable"],
+      "status": "draft",
+      "latest_version": "1.0.0",
+      "featured": true,
+      "created_at": "2026-04-24",
+      "updated_at": "2026-04-24",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "status": "draft",
+          "released": "2026-04-24",
+          "schema_url": "https://profiles.openserviceprotocol.org/cold-chain-logistics/v1.schema.json",
+          "page_url": "https://openserviceprotocol.org/profiles/cold-chain-logistics/v1",
+          "required_fields": ["temperature_range_celsius", "temperature_logging"],
+          "field_count": 11,
+          "deprecation": null
+        }
+      ],
+      "maintainers": [
+        { "name": "OSP Core", "url": "https://openserviceprotocol.org" }
+      ],
+      "example_manifests": [
+        "https://openserviceprotocol.org/examples/ltl-transport.yaml"
+      ]
+    },
+    {
+      "id": "osp-consulting",
+      "title": "Consulting",
+      "description": "Vocabulary for strategy and advisory services: practice areas, engagement models, industry depth, methodology style, implementation capability.",
+      "domain": "consulting",
+      "subdomain": "strategy",
+      "tags": ["advisory", "strategy", "transformation", "implementation"],
+      "status": "draft",
+      "latest_version": "1.0.0",
+      "featured": true,
+      "created_at": "2026-04-24",
+      "updated_at": "2026-04-24",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "status": "draft",
+          "released": "2026-04-24",
+          "schema_url": "https://profiles.openserviceprotocol.org/consulting/v1.schema.json",
+          "page_url": "https://openserviceprotocol.org/profiles/consulting/v1",
+          "required_fields": ["practice_areas", "engagement_models"],
+          "field_count": 13,
+          "deprecation": null
+        }
+      ],
+      "maintainers": [
+        { "name": "OSP Core", "url": "https://openserviceprotocol.org" }
+      ],
+      "example_manifests": [
+        "https://openserviceprotocol.org/examples/market-entry.yaml"
+      ]
+    },
+    {
+      "id": "osp-it-managed-services",
+      "title": "IT Managed Services",
+      "description": "Vocabulary for managed IT: hosting, databases, Kubernetes, security, backup, monitoring, SRE-on-demand. Covers SLAs, support coverage, recovery objectives, compliance.",
+      "domain": "it-services",
+      "subdomain": "managed-infrastructure",
+      "tags": ["cloud", "managed", "hosting", "kubernetes", "sre", "compliance", "agent-ops"],
+      "status": "draft",
+      "latest_version": "1.0.0",
+      "featured": true,
+      "created_at": "2026-04-24",
+      "updated_at": "2026-04-24",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "status": "draft",
+          "released": "2026-04-24",
+          "schema_url": "https://profiles.openserviceprotocol.org/it-managed-services/v1.schema.json",
+          "page_url": "https://openserviceprotocol.org/profiles/it-managed-services/v1",
+          "required_fields": ["service_categories", "cloud_providers"],
+          "field_count": 18,
+          "deprecation": null
+        }
+      ],
+      "maintainers": [
+        { "name": "OSP Core", "url": "https://openserviceprotocol.org" }
+      ],
+      "example_manifests": [
+        "https://openserviceprotocol.org/examples/managed-hosting.yaml"
+      ]
+    },
+    {
+      "id": "osp-legal-advisory",
+      "title": "Legal Advisory",
+      "description": "Vocabulary for legal services: jurisdictions, practice areas, matter types, privilege regime, court representation, conflict management.",
+      "domain": "legal",
+      "subdomain": "advisory",
+      "tags": ["law", "advisory", "litigation", "regulatory", "compliance"],
+      "status": "draft",
+      "latest_version": "1.0.0",
+      "featured": true,
+      "created_at": "2026-04-24",
+      "updated_at": "2026-04-24",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "status": "draft",
+          "released": "2026-04-24",
+          "schema_url": "https://profiles.openserviceprotocol.org/legal-advisory/v1.schema.json",
+          "page_url": "https://openserviceprotocol.org/profiles/legal-advisory/v1",
+          "required_fields": ["jurisdictions", "practice_areas"],
+          "field_count": 13,
+          "deprecation": null
+        }
+      ],
+      "maintainers": [
+        { "name": "OSP Core", "url": "https://openserviceprotocol.org" }
+      ],
+      "example_manifests": [
+        "https://openserviceprotocol.org/examples/legal-market-entry.yaml"
+      ]
+    },
+    {
+      "id": "osp-energy-supply",
+      "title": "Energy Supply",
+      "description": "Vocabulary for energy retail: commodity, supply mix, carbon intensity, green certifications, tariff model, consumption range, voltage levels.",
+      "domain": "energy",
+      "subdomain": "retail_supply",
+      "tags": ["electricity", "gas", "renewable", "green-energy", "tariff", "carbon"],
+      "status": "draft",
+      "latest_version": "1.0.0",
+      "featured": true,
+      "created_at": "2026-04-24",
+      "updated_at": "2026-04-24",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "status": "draft",
+          "released": "2026-04-24",
+          "schema_url": "https://profiles.openserviceprotocol.org/energy-supply/v1.schema.json",
+          "page_url": "https://openserviceprotocol.org/profiles/energy-supply/v1",
+          "required_fields": ["commodity", "consumer_segments"],
+          "field_count": 17,
+          "deprecation": null
+        }
+      ],
+      "maintainers": [
+        { "name": "OSP Core", "url": "https://openserviceprotocol.org" }
+      ],
+      "example_manifests": [
+        "https://openserviceprotocol.org/examples/energy-sme-supply.yaml"
+      ]
+    },
+    {
+      "id": "osp-cleaning-services",
+      "title": "Cleaning Services",
+      "description": "Vocabulary for facility cleaning: service types, specializations (medical, cleanroom, food), surface types, chemical standards, access models, staff vetting.",
+      "domain": "facility_services",
+      "subdomain": "cleaning",
+      "tags": ["facility", "cleaning", "disinfection", "cleanroom", "medical", "iso14644"],
+      "status": "draft",
+      "latest_version": "1.0.0",
+      "featured": true,
+      "created_at": "2026-04-24",
+      "updated_at": "2026-04-24",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "status": "draft",
+          "released": "2026-04-24",
+          "schema_url": "https://profiles.openserviceprotocol.org/cleaning-services/v1.schema.json",
+          "page_url": "https://openserviceprotocol.org/profiles/cleaning-services/v1",
+          "required_fields": ["service_types", "frequency_options"],
+          "field_count": 16,
+          "deprecation": null
+        }
+      ],
+      "maintainers": [
+        { "name": "OSP Core", "url": "https://openserviceprotocol.org" }
+      ],
+      "example_manifests": [
+        "https://openserviceprotocol.org/examples/cleaning-medical.yaml"
+      ]
+    }
+  ]
+}

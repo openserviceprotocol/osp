@@ -8,13 +8,39 @@
   "properties": {
     "osp_version": {
       "type": "string",
-      "enum": ["0.1"],
-      "description": "OSP specification version"
+      "enum": ["0.1", "0.2"],
+      "description": "OSP specification version. 0.2 adds domain profiles and the evaluation.attributes block."
     },
     "service": {
       "type": "object",
       "required": ["identity", "evaluation"],
       "properties": {
+
+        "profiles": {
+          "type": "array",
+          "description": "Domain profiles this manifest conforms to. Profiles define branch-specific vocabularies validated against their own JSON Schemas. See spec/profiles.md.",
+          "items": {
+            "type": "object",
+            "required": ["id", "version"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]*$",
+                "description": "Profile identifier (kebab-case). Matches the keys used under service.evaluation.attributes."
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^\\d+\\.\\d+\\.\\d+$"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "Resolvable JSON Schema URL for the profile."
+              }
+            }
+          }
+        },
+
 
         "identity": {
           "type": "object",
@@ -22,8 +48,8 @@
           "properties": {
             "id": {
               "type": "string",
-              "pattern": "^[a-z][a-z0-9]*\\.[a-z][a-z0-9]*\\.[a-z][a-z0-9_-]*$",
-              "description": "Unique identifier in domain.entity.action format"
+              "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*\\.[a-z][a-z0-9_-]*$",
+              "description": "Unique identifier in domain.entity.action format. Each segment starts with a lowercase letter; subsequent characters may include lowercase letters, digits, hyphens (segments 1-2) plus underscores (segment 3)."
             },
             "name": {
               "type": "string",
@@ -74,8 +100,13 @@
           "properties": {
             "capacity": {
               "type": "object",
-              "description": "Domain-specific capacity parameters. No fixed schema — providers define fields relevant to their service.",
+              "description": "Quantitative 'how much can this service handle' parameters. No fixed schema — providers define fields relevant to their service.",
               "additionalProperties": true
+            },
+            "attributes": {
+              "type": "object",
+              "description": "Profile-scoped, domain-specific attributes. Keys are profile ids declared in service.profiles; values are validated against each profile's schema. Use this (not 'capacity') for qualitative branch-specific fields.",
+              "additionalProperties": { "type": "object" }
             },
             "geography": {
               "type": "object",

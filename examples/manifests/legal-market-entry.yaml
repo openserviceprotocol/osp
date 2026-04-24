@@ -1,0 +1,148 @@
+# Example: Swiss law firm offering a market-entry legal package for foreign
+# companies establishing operations in Switzerland. Demonstrates the
+# legal-advisory-v1 profile in context.
+
+osp_version: "0.2"
+
+service:
+  identity:
+    id: "helvetia-legal.advisory.market-entry-ch"
+    name: "Switzerland Market Entry — Legal Package"
+    version: "1.0.0"
+    status: "active"
+    maturity: "assisted"
+    summary: |
+      End-to-end legal support for foreign companies establishing a
+      Swiss subsidiary or branch. Covers incorporation, tax registration,
+      employment setup, and regulatory screening for regulated industries.
+    when_to_use: |
+      Non-Swiss company planning to incorporate a legal entity in
+      Switzerland within the next 3-12 months, budget CHF 15,000-80,000
+      for the legal workstream, needs advice in English or German.
+    when_not_to_use: |
+      Pure tax-only advice (use our tax-specialist service), litigation
+      (we advise but do not appear in court below appellate level), or
+      matters requiring bar admissions outside Switzerland and the EU.
+    tags: ["legal", "market-entry", "switzerland", "corporate", "tax", "employment"]
+    domain: "legal"
+    service_family: "advisory"
+    engagement_type: "consultative"
+
+  profiles:
+    - id: "osp-legal-advisory"
+      version: "1.0.0"
+      url: "https://profiles.openserviceprotocol.org/legal-advisory/v1.schema.json"
+
+  evaluation:
+    capacity:
+      min_engagement_days: 15
+      max_parallel_engagements: 8
+      team_size_range: [2, 5]
+
+    attributes:
+      osp-legal-advisory:
+        jurisdictions: ["CH", "CH-ZH", "CH-GE", "CH-ZG", "LI"]
+        practice_areas:
+          - corporate_m_and_a
+          - commercial_contracts
+          - employment
+          - tax
+          - regulatory_financial_services
+          - data_protection
+        matter_types: ["advisory", "transactional", "regulatory_filings", "due_diligence"]
+        bar_admissions:
+          - "Zürcher Anwaltsverband"
+          - "Ordre des avocats de Genève"
+          - "Schweizerischer Anwaltsverband (SAV)"
+        court_representation: ["administrative", "first_instance", "appellate"]
+        languages_of_work: ["de", "en", "fr", "it"]
+        billing_models: ["hourly", "fixed_fee", "capped_fee", "retainer"]
+        privilege_regime: ["berufsgeheimnis", "in_house_counsel_privilege_recognised"]
+        conflict_check_process: "automated_registry"
+        ethical_walls_supported: true
+        regulated_industry_experience:
+          - financial_services
+          - insurance
+          - pharma
+          - crypto_digital_assets
+        team_composition:
+          partners_available: 4
+          associates_available: 11
+          typical_lead_seniority: "counsel"
+        cross_border_capability: true
+
+    geography:
+      service_regions: ["CH", "LI"]
+
+    performance:
+      standard_leadtime: "6-10 weeks for standard incorporation"
+      on_time_rate: 0.91
+      sample_size: 68
+      sample_period: "18 months"
+
+    pricing:
+      model: "per_project"
+      currency: "CHF"
+      indicative_range:
+        min: 15000
+        max: 80000
+        note: |
+          Fixed-fee packages for standard incorporations. Regulated-industry
+          matters (banking, insurance, crypto) scope individually and are
+          quoted on an hourly basis with cap.
+
+    certifications: []
+
+    sla:
+      response_time: "< 4h during business hours (CET)"
+      quality_guarantee: |
+        All outgoing advice reviewed by a partner. Fixed-fee scope
+        overruns absorbed by firm unless client changes instructions
+        in writing.
+
+    confidence_note: |
+      Metrics based on 68 completed market-entry mandates over
+      18 months. Fixed-fee indication assumes standard scope as
+      defined in the engagement letter.
+
+  contract:
+    engagement:
+      type: "consultative"
+      multi_phase: true
+      initial_phase_independent: true
+      scope_negotiation: |
+        Phase 1 (2-3 weeks) covers structure selection and entity setup.
+        Phase 2 (4-7 weeks) covers registrations, permits, and operational
+        readiness. Either phase orderable standalone.
+
+  delivery:
+    mode: "interactive"
+    interaction:
+      input_requests_possible: true
+      review_points: true
+      max_interactions: 12
+    human_involvement:
+      disclosed: true
+      typical_touchpoints: 8
+
+  governance:
+    access:
+      authentication_required: true
+      authorization_model: "oauth2"
+      agent_registration_required: true
+    data:
+      input_sensitivity: "confidential"
+      output_sensitivity: "confidential"
+      pii_fields: ["beneficial_owners", "directors", "employees"]
+      retention_period: "10 years (statutory)"
+      deletion_on_request: false
+    compliance:
+      regulations: ["BGFA", "DSG", "GDPR", "FINMA Circulars where applicable"]
+      audit_trail: true
+
+  lifecycle:
+    created: "2026-03-01"
+    last_modified: "2026-04-24"
+    review:
+      next_review: "2026-10-01"
+      review_cycle: "semi-annually"
