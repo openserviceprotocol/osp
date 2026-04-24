@@ -13,9 +13,9 @@ Usage:
 
 Resolution:
     Profile schemas are resolved from the local `profiles/` directory first
-    (by convention: profiles/<name>-v<major>.schema.json). If not found and a
-    URL is declared, the validator falls back to an HTTP fetch. Unknown
-    profiles produce warnings, not errors.
+    (by convention: profiles/<name>/v<major>.schema.json, mirroring the URL
+    layout). If not found and a URL is declared, the validator falls back to
+    an HTTP fetch. Unknown profiles produce warnings, not errors.
 
 Registry check:
     --check-registry validates `profiles/registry/index.json` against its
@@ -79,14 +79,14 @@ def resolve_profile_schema(profile_id: str, profile_url: Optional[str]) -> Optio
         parts = relative.split("/")
         if len(parts) == 2 and parts[1].endswith(".schema.json"):
             name = parts[0]
-            version_tag = parts[1].replace(".schema.json", "")
-            candidates.append(PROFILES_DIR / f"{name}-{version_tag}.schema.json")
+            version_file = parts[1]
+            candidates.append(PROFILES_DIR / name / version_file)
 
     if profile_id.startswith("osp-"):
         stripped = profile_id[len("osp-"):]
     else:
         stripped = profile_id
-    candidates.append(PROFILES_DIR / f"{stripped}-v1.schema.json")
+    candidates.append(PROFILES_DIR / stripped / "v1.schema.json")
 
     for candidate in candidates:
         if candidate.exists():
@@ -202,7 +202,7 @@ def check_registry() -> Tuple[bool, List[str]]:
                 relative = schema_url[len(REGISTRY_URL_PREFIX):]
                 parts = relative.split("/")
                 if len(parts) == 2:
-                    expected_local = PROFILES_DIR / f"{parts[0]}-{parts[1].replace('.schema.json', '')}.schema.json"
+                    expected_local = PROFILES_DIR / parts[0] / parts[1]
                     if expected_local.exists():
                         listed_files.add(expected_local.resolve())
 
@@ -237,7 +237,7 @@ def check_registry() -> Tuple[bool, List[str]]:
 
             messages.append(f"  [OK] {pid} {v}")
 
-    local_schemas = {p.resolve() for p in PROFILES_DIR.glob("*.schema.json")}
+    local_schemas = {p.resolve() for p in PROFILES_DIR.glob("*/v*.schema.json") if p.parent.name != "registry"}
     orphans = local_schemas - listed_files
     if orphans:
         ok = False

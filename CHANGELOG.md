@@ -9,11 +9,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - GitHub Actions workflow (`.github/workflows/validate.yml`) — runs the validator against all example manifests and the profile registry on every push and pull request to `main`.
+- GitHub Actions workflow (`.github/workflows/deploy-pages.yml`) — publishes the `profiles/` directory to GitHub Pages, serving `profiles.openserviceprotocol.org`.
 - `--check-registry` mode in `tools/validate.py` — validates the registry index against its schema, verifies every listed profile schema resolves and parses as valid JSON Schema, cross-checks `required_fields` hints, and flags orphan profile schemas not listed in the registry.
-- `profiles/registry/profiles.txt` — llms.txt-style Markdown summary of the profile registry for LLM-friendly discovery.
+- `profiles/profiles.txt` — llms.txt-style Markdown summary of the profile registry for LLM-friendly discovery (served at `profiles.openserviceprotocol.org/profiles.txt`).
+- `profiles/index.html` — landing page for the profiles subdomain, linking to the registry and pilot profiles.
+- `profiles/CNAME` — custom domain configuration for GitHub Pages.
 
 ### Changed
 
+- **Profile directory layout.** Schemas moved from `profiles/<name>-v<major>.schema.json` to `profiles/<name>/v<major>.schema.json` to mirror the public URL layout. Validator updated accordingly.
+- `profiles/profiles.txt` moved from `profiles/registry/profiles.txt` so it's served at the root of the profile subdomain.
 - RFC-001 status updated to Accepted (implemented in OSP v0.2).
 
 ## [0.2.0] — 2026-04-24

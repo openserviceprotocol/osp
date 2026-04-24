@@ -80,7 +80,7 @@ Machine-readable schemas for validation:
 - **[service-manifest.schema.json](schemas/service-manifest.schema.json)** — validates service manifest YAML files
 - **[profiles/](profiles/)** — seven pilot domain profiles (logistics, cold-chain, consulting, IT managed services, legal, energy, cleaning)
 - **[profiles/registry/index.json](profiles/registry/index.json)** — machine-readable profile registry, mirrored at `profiles.openserviceprotocol.org/registry/index.json`
-- **[profiles/registry/profiles.txt](profiles/registry/profiles.txt)** — llms.txt-style Markdown summary of the registry for LLM-friendly discovery
+- **[profiles/profiles.txt](profiles/profiles.txt)** — llms.txt-style Markdown summary of the registry for LLM-friendly discovery, served at `profiles.openserviceprotocol.org/profiles.txt`
 
 ## Examples
 
@@ -124,17 +124,21 @@ osp/
 │   ├── osp-md.schema.json              # JSON Schema for osp.md
 │   └── service-manifest.schema.json    # JSON Schema for manifests
 ├── profiles/                           # Branch-specific vocabularies (v0.2)
-│   ├── logistics-general-v1.schema.json
-│   ├── cold-chain-logistics-v1.schema.json
-│   ├── consulting-v1.schema.json
-│   ├── it-managed-services-v1.schema.json
-│   ├── legal-advisory-v1.schema.json
-│   ├── energy-supply-v1.schema.json
-│   ├── cleaning-services-v1.schema.json
+│   │                                     Directory layout mirrors the
+│   │                                     public URL at profiles.openserviceprotocol.org
+│   ├── logistics-general/v1.schema.json
+│   ├── cold-chain-logistics/v1.schema.json
+│   ├── consulting/v1.schema.json
+│   ├── it-managed-services/v1.schema.json
+│   ├── legal-advisory/v1.schema.json
+│   ├── energy-supply/v1.schema.json
+│   ├── cleaning-services/v1.schema.json
+│   ├── profiles.txt                    # llms.txt-style Markdown summary
+│   ├── index.html                      # Landing page for the subdomain
+│   ├── CNAME                           # profiles.openserviceprotocol.org
 │   └── registry/
 │       ├── index.json                  # Machine-readable registry
-│       ├── index.schema.json
-│       └── profiles.txt                # llms.txt-style Markdown summary
+│       └── index.schema.json
 ├── examples/
 │   ├── logistics.osp.md
 │   ├── consulting.osp.md
@@ -146,7 +150,8 @@ osp/
 │   └── validate.py                     # Manifest + profile + registry validator
 └── .github/
     └── workflows/
-        └── validate.yml                # CI: runs validator on PRs and main
+        ├── validate.yml                # CI: runs validator on PRs and main
+        └── deploy-pages.yml             # Publishes profiles/ to Pages
 ```
 
 ## Contributing
